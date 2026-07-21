@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PhimHay - Xem Phim Online Miễn Phí</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,6 +33,7 @@
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         ::-webkit-scrollbar { width: 8px; }
@@ -53,15 +54,15 @@
             box-shadow: 0 2px 30px rgba(0,0,0,0.5);
         }
         .header-inner {
-            max-width: 1400px; margin: 0 auto; padding: 0 24px;
-            height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            max-width: 1400px; margin: 0 auto; padding: 0 20px;
+            height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
         }
         .logo {
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 8px;
             text-decoration: none; color: var(--text);
-            font-size: 24px; font-weight: 800; letter-spacing: -0.5px; flex-shrink: 0;
+            font-size: 20px; font-weight: 800; letter-spacing: -0.5px; flex-shrink: 0;
         }
-        .logo i { color: var(--primary); font-size: 28px; }
+        .logo i { color: var(--primary); font-size: 24px; }
         .logo span {
             background: var(--gradient);
             -webkit-background-clip: text;
@@ -70,15 +71,22 @@
         }
 
         .nav {
-            display: flex; align-items: center; gap: 4px;
+            display: flex; align-items: center; gap: 2px;
             overflow-x: auto; scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+            max-width: 600px;
+            padding: 4px 0;
+            mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 8px, black calc(100% - 8px), transparent);
         }
         .nav::-webkit-scrollbar { display: none; }
         .nav-btn {
-            padding: 8px 14px; border: none; background: transparent;
+            padding: 7px 12px; border: none; background: transparent;
             color: var(--text-secondary); font-size: 13px; font-weight: 500;
             border-radius: 8px; cursor: pointer; transition: var(--transition);
             white-space: nowrap; font-family: inherit;
+            flex-shrink: 0;
         }
         .nav-btn:hover, .nav-btn.active {
             color: var(--text); background: var(--bg-hover);
@@ -88,35 +96,30 @@
         }
 
         .search-box {
-            position: relative; width: 260px; flex-shrink: 0;
+            position: relative; width: 200px; flex-shrink: 0;
         }
         .search-box input {
-            width: 100%; padding: 10px 40px 10px 16px;
+            width: 100%; padding: 9px 32px 9px 12px;
             border: 1px solid var(--border); border-radius: 10px;
             background: var(--bg-secondary); color: var(--text);
-            font-size: 14px; font-family: inherit; transition: var(--transition);
+            font-size: 13px; font-family: inherit; transition: var(--transition);
         }
         .search-box input:focus {
             outline: none; border-color: var(--primary); background: var(--bg-card);
         }
         .search-box input::placeholder { color: var(--text-muted); }
         .search-box button {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
             background: none; border: none; color: var(--text-muted);
-            cursor: pointer; padding: 6px; font-size: 16px;
-        }
-
-        .mobile-menu-btn {
-            display: none; background: none; border: none;
-            color: var(--text); font-size: 24px; cursor: pointer;
+            cursor: pointer; padding: 5px; font-size: 13px;
         }
 
         /* Main */
-        .main { margin-top: 70px; min-height: calc(100vh - 70px); }
+        .main { margin-top: 64px; min-height: calc(100vh - 64px); }
 
         /* Hero */
         .hero {
-            position: relative; height: 500px; overflow: hidden;
+            position: relative; height: 480px; overflow: hidden;
             display: flex; align-items: flex-end;
         }
         .hero-bg {
@@ -132,45 +135,45 @@
         }
         .hero-content {
             position: relative; z-index: 2;
-            max-width: 1400px; width: 100%; margin: 0 auto; padding: 40px 24px;
+            max-width: 1400px; width: 100%; margin: 0 auto; padding: 36px 24px;
         }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; background: var(--gradient);
-            border-radius: 20px; font-size: 12px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px;
+            padding: 5px 12px; background: var(--gradient);
+            border-radius: 20px; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;
         }
         .hero-title {
-            font-size: 48px; font-weight: 800; line-height: 1.1;
-            margin-bottom: 12px; max-width: 700px;
+            font-size: 44px; font-weight: 800; line-height: 1.1;
+            margin-bottom: 10px; max-width: 700px;
             text-shadow: 0 2px 20px rgba(0,0,0,0.5);
         }
         .hero-meta {
-            display: flex; align-items: center; gap: 16px;
-            margin-bottom: 20px; flex-wrap: wrap;
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 16px; flex-wrap: wrap;
         }
         .hero-meta span {
-            display: flex; align-items: center; gap: 6px;
-            font-size: 14px; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 5px;
+            font-size: 13px; color: var(--text-secondary);
         }
         .hero-meta .rating { color: #f5c518; font-weight: 600; }
         .hero-meta .tag {
-            padding: 4px 12px; background: rgba(255,255,255,0.1);
-            border-radius: 6px; font-size: 13px;
+            padding: 3px 10px; background: rgba(255,255,255,0.1);
+            border-radius: 6px; font-size: 12px;
         }
         .hero-desc {
-            font-size: 16px; color: var(--text-secondary);
-            max-width: 600px; line-height: 1.6; margin-bottom: 24px;
+            font-size: 15px; color: var(--text-secondary);
+            max-width: 560px; line-height: 1.6; margin-bottom: 20px;
             display: -webkit-box; -webkit-line-clamp: 3;
             -webkit-box-orient: vertical; overflow: hidden;
         }
-        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
 
         .btn {
-            padding: 12px 28px; border-radius: 8px;
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            padding: 11px 24px; border-radius: 8px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
             transition: var(--transition); border: none;
-            display: inline-flex; align-items: center; gap: 8px;
+            display: inline-flex; align-items: center; gap: 7px;
             font-family: inherit; text-decoration: none;
         }
         .btn-primary {
@@ -187,36 +190,36 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         .btn-secondary:hover { background: rgba(255,255,255,0.2); }
-        .btn-sm { padding: 8px 16px; font-size: 13px; }
+        .btn-sm { padding: 7px 14px; font-size: 12px; }
 
         /* Section */
         .section {
-            max-width: 1400px; margin: 0 auto; padding: 40px 24px;
+            max-width: 1400px; margin: 0 auto; padding: 32px 24px;
         }
         .section-header {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+            margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
         }
         .section-title {
-            font-size: 24px; font-weight: 700;
-            display: flex; align-items: center; gap: 10px;
+            font-size: 22px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
         }
         .section-title i { color: var(--primary); }
         .result-count {
-            color: var(--text-muted); font-size: 14px;
+            color: var(--text-muted); font-size: 13px;
         }
 
         /* Category Grid */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
         }
         .category-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 24px 16px;
+            padding: 22px 14px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
@@ -229,22 +232,18 @@
             box-shadow: 0 10px 30px rgba(229, 9, 20, 0.2);
         }
         .category-card i {
-            font-size: 32px; color: var(--primary);
-            margin-bottom: 12px; display: block;
+            font-size: 28px; color: var(--primary);
+            margin-bottom: 10px; display: block;
         }
         .category-card .name {
-            font-size: 15px; font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .category-card .count {
-            font-size: 12px; color: var(--text-muted);
+            font-size: 14px; font-weight: 600;
         }
 
         /* Movie Grid */
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 18px;
         }
         .movie-card {
             position: relative; border-radius: var(--radius);
@@ -252,8 +251,8 @@
             cursor: pointer; transition: var(--transition);
         }
         .movie-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.4);
         }
         .movie-poster {
             position: relative; aspect-ratio: 2/3; overflow: hidden;
@@ -262,27 +261,27 @@
             width: 100%; height: 100%; object-fit: cover;
             transition: transform 0.5s ease;
         }
-        .movie-card:hover .movie-poster img { transform: scale(1.1); }
+        .movie-card:hover .movie-poster img { transform: scale(1.08); }
         .movie-overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%);
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
             opacity: 0; transition: opacity 0.3s ease;
             display: flex; align-items: center; justify-content: center;
         }
         .movie-card:hover .movie-overlay { opacity: 1; }
         .play-btn {
-            width: 60px; height: 60px; border-radius: 50%;
+            width: 52px; height: 52px; border-radius: 50%;
             background: var(--gradient);
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 24px;
+            color: white; font-size: 20px;
             transform: scale(0.8); transition: transform 0.3s ease;
-            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.5);
+            box-shadow: 0 4px 16px rgba(229, 9, 20, 0.5);
         }
         .movie-card:hover .play-btn { transform: scale(1); }
         .movie-badge {
-            position: absolute; top: 10px; left: 10px;
-            padding: 4px 10px; border-radius: 6px;
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            position: absolute; top: 8px; left: 8px;
+            padding: 3px 8px; border-radius: 5px;
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
         }
         .badge-quality { background: var(--gradient); color: white; }
         .badge-episode {
@@ -290,45 +289,28 @@
             backdrop-filter: blur(10px);
         }
         .badge-lang {
-            position: absolute; top: 10px; right: 10px;
-            padding: 4px 10px; border-radius: 6px;
-            font-size: 11px; font-weight: 600;
+            position: absolute; top: 8px; right: 8px;
+            padding: 3px 8px; border-radius: 5px;
+            font-size: 10px; font-weight: 600;
             background: rgba(229, 9, 20, 0.9); color: white;
         }
-        .movie-info { padding: 14px; }
+        .movie-info { padding: 12px; }
         .movie-name {
-            font-size: 14px; font-weight: 600; line-height: 1.4;
-            margin-bottom: 6px;
+            font-size: 13px; font-weight: 600; line-height: 1.4;
+            margin-bottom: 5px;
             display: -webkit-box; -webkit-line-clamp: 2;
             -webkit-box-orient: vertical; overflow: hidden;
-            min-height: 40px;
+            min-height: 36px;
         }
         .movie-meta {
             display: flex; align-items: center; justify-content: space-between;
-            font-size: 12px; color: var(--text-muted);
+            font-size: 11px; color: var(--text-muted);
         }
         .movie-meta span {
-            display: flex; align-items: center; gap: 4px;
+            display: flex; align-items: center; gap: 3px;
         }
 
         /* Loading */
-        .loading {
-            display: flex; align-items: center; justify-content: center;
-            padding: 60px; gap: 8px;
-        }
-        .loading-spinner {
-            width: 40px; height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary); border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .skeleton-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
         .skeleton-card {
             background: var(--bg-card); border-radius: var(--radius); overflow: hidden;
         }
@@ -337,10 +319,10 @@
             background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-hover) 50%, var(--bg-secondary) 75%);
             background-size: 200% 100%; animation: shimmer 1.5s infinite;
         }
-        .skeleton-info { padding: 14px; }
+        .skeleton-info { padding: 12px; }
         .skeleton-line {
-            height: 14px; background: var(--bg-secondary);
-            border-radius: 4px; margin-bottom: 8px;
+            height: 12px; background: var(--bg-secondary);
+            border-radius: 4px; margin-bottom: 6px;
             animation: shimmer 1.5s infinite;
         }
         .skeleton-line.short { width: 60%; }
@@ -352,13 +334,13 @@
         /* Pagination */
         .pagination {
             display: flex; align-items: center; justify-content: center;
-            gap: 8px; margin-top: 40px; flex-wrap: wrap;
+            gap: 6px; margin-top: 36px; flex-wrap: wrap;
         }
         .page-btn {
-            min-width: 40px; height: 40px; padding: 0 12px;
+            min-width: 36px; height: 36px; padding: 0 10px;
             border: 1px solid var(--border); background: var(--bg-card);
             color: var(--text-secondary); border-radius: 8px;
-            cursor: pointer; font-size: 14px; font-weight: 500;
+            cursor: pointer; font-size: 13px; font-weight: 500;
             font-family: inherit; transition: var(--transition);
             display: flex; align-items: center; justify-content: center;
         }
@@ -374,7 +356,7 @@
             background: rgba(0,0,0,0.92);
             z-index: 2000;
             display: flex; align-items: center; justify-content: center;
-            padding: 20px;
+            padding: 16px;
             opacity: 0; visibility: hidden;
             transition: all 0.3s ease;
         }
@@ -382,10 +364,10 @@
         .modal-content {
             background: var(--bg-secondary);
             border-radius: var(--radius);
-            width: 100%; max-width: 1200px;
-            max-height: 95vh;
+            width: 100%; max-width: 1100px;
+            max-height: 94vh;
             overflow-y: auto;
-            transform: scale(0.9) translateY(20px);
+            transform: scale(0.92) translateY(16px);
             transition: transform 0.3s ease;
             position: relative;
         }
@@ -393,10 +375,10 @@
             transform: scale(1) translateY(0);
         }
         .modal-close {
-            position: absolute; top: 16px; right: 16px;
-            width: 40px; height: 40px; border-radius: 50%;
+            position: absolute; top: 14px; right: 14px;
+            width: 36px; height: 36px; border-radius: 50%;
             background: rgba(0,0,0,0.7); border: none;
-            color: white; font-size: 20px; cursor: pointer;
+            color: white; font-size: 18px; cursor: pointer;
             z-index: 10; display: flex; align-items: center; justify-content: center;
             transition: var(--transition);
         }
@@ -406,7 +388,7 @@
         .video-wrapper {
             position: relative; width: 100%;
             background: #000; border-radius: var(--radius);
-            overflow: hidden; margin-bottom: 20px;
+            overflow: hidden; margin-bottom: 16px;
         }
         .video-wrapper video {
             width: 100%; display: block;
@@ -415,13 +397,13 @@
             aspect-ratio: 16/9;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            gap: 16px; color: var(--text-secondary);
+            gap: 14px; color: var(--text-secondary);
         }
-        .video-placeholder i { font-size: 64px; color: var(--primary); }
+        .video-placeholder i { font-size: 56px; color: var(--primary); }
 
         /* Detail View */
         .detail-hero {
-            position: relative; min-height: 350px;
+            position: relative; min-height: 320px;
             overflow: hidden; display: flex; align-items: flex-end;
         }
         .detail-hero-bg {
@@ -435,60 +417,60 @@
         }
         .detail-hero-content {
             position: relative; z-index: 2;
-            display: flex; gap: 30px; padding: 40px;
+            display: flex; gap: 24px; padding: 32px;
             align-items: flex-end;
         }
         .detail-poster {
-            width: 180px; border-radius: var(--radius);
-            overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            width: 160px; border-radius: var(--radius);
+            overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.5);
             flex-shrink: 0;
         }
         .detail-poster img { width: 100%; display: block; }
-        .detail-info { flex: 1; padding-bottom: 10px; }
-        .detail-title { font-size: 32px; font-weight: 800; margin-bottom: 6px; line-height: 1.2; }
-        .detail-origin { font-size: 15px; color: var(--text-secondary); margin-bottom: 14px; }
+        .detail-info { flex: 1; padding-bottom: 8px; }
+        .detail-title { font-size: 28px; font-weight: 800; margin-bottom: 5px; line-height: 1.2; }
+        .detail-origin { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
         .detail-meta {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 16px; flex-wrap: wrap;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 14px; flex-wrap: wrap;
         }
         .detail-meta span {
-            display: flex; align-items: center; gap: 6px; font-size: 14px;
+            display: flex; align-items: center; gap: 5px; font-size: 13px;
         }
         .detail-meta .tag {
-            padding: 4px 12px; background: rgba(255,255,255,0.1);
-            border-radius: 6px; font-size: 13px;
+            padding: 3px 10px; background: rgba(255,255,255,0.1);
+            border-radius: 6px; font-size: 12px;
         }
-        .detail-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-        .detail-body { padding: 0 40px 40px; }
-        .detail-section { margin-bottom: 28px; }
+        .detail-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .detail-body { padding: 0 32px 32px; }
+        .detail-section { margin-bottom: 24px; }
         .detail-section-title {
-            font-size: 18px; font-weight: 700; margin-bottom: 14px;
-            display: flex; align-items: center; gap: 8px;
+            font-size: 16px; font-weight: 700; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 7px;
         }
         .detail-content {
-            color: var(--text-secondary); line-height: 1.8; font-size: 15px;
+            color: var(--text-secondary); line-height: 1.7; font-size: 14px;
         }
-        .detail-content p { margin-bottom: 12px; }
+        .detail-content p { margin-bottom: 10px; }
         .cast-list {
-            display: flex; gap: 10px; flex-wrap: wrap;
+            display: flex; gap: 8px; flex-wrap: wrap;
         }
         .cast-item {
-            padding: 8px 14px; background: var(--bg-card);
-            border-radius: 8px; font-size: 14px;
-            display: flex; align-items: center; gap: 8px;
+            padding: 7px 12px; background: var(--bg-card);
+            border-radius: 8px; font-size: 13px;
+            display: flex; align-items: center; gap: 7px;
             border: 1px solid var(--border);
         }
-        .cast-item i { color: var(--primary); }
+        .cast-item i { color: var(--primary); font-size: 12px; }
 
         /* Server & Episode */
         .server-tabs {
-            display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+            display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
         }
         .server-tab {
-            padding: 10px 18px; background: var(--bg-card);
+            padding: 8px 16px; background: var(--bg-card);
             border: 1px solid var(--border); border-radius: 8px;
             color: var(--text-secondary); cursor: pointer;
-            font-size: 14px; font-weight: 500; font-family: inherit;
+            font-size: 13px; font-weight: 500; font-family: inherit;
             transition: var(--transition);
         }
         .server-tab:hover { border-color: var(--primary); color: var(--text); }
@@ -497,14 +479,14 @@
         }
         .episode-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 6px;
         }
         .episode-btn {
-            padding: 10px; background: var(--bg-card);
+            padding: 9px; background: var(--bg-card);
             border: 1px solid var(--border); border-radius: 8px;
             color: var(--text); cursor: pointer;
-            font-size: 13px; font-weight: 500; font-family: inherit;
+            font-size: 12px; font-weight: 500; font-family: inherit;
             transition: var(--transition); text-align: center;
         }
         .episode-btn:hover { border-color: var(--primary); background: var(--bg-hover); }
@@ -513,7 +495,7 @@
         /* Breadcrumb */
         .breadcrumb {
             display: flex; align-items: center; gap: 8px;
-            margin-bottom: 20px; font-size: 14px; color: var(--text-muted);
+            margin-bottom: 16px; font-size: 13px; color: var(--text-muted);
             flex-wrap: wrap;
         }
         .breadcrumb a {
@@ -521,108 +503,125 @@
             transition: var(--transition);
         }
         .breadcrumb a:hover { color: var(--primary); }
-        .breadcrumb i { font-size: 10px; }
+        .breadcrumb i { font-size: 9px; }
 
         /* Footer */
         .footer {
             background: var(--bg-secondary);
             border-top: 1px solid var(--border);
-            padding: 40px 24px; margin-top: 60px;
+            padding: 36px 24px; margin-top: 48px;
         }
         .footer-inner {
             max-width: 1400px; margin: 0 auto; text-align: center;
         }
-        .footer-logo { font-size: 24px; font-weight: 800; margin-bottom: 16px; }
+        .footer-logo { font-size: 22px; font-weight: 800; margin-bottom: 14px; }
         .footer-logo span {
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .footer-text {
-            color: var(--text-muted); font-size: 14px;
-            max-width: 600px; margin: 0 auto;
+            color: var(--text-muted); font-size: 13px;
+            max-width: 520px; margin: 0 auto;
         }
 
         /* Toast */
         .toast {
-            position: fixed; bottom: 30px; left: 50%;
+            position: fixed; bottom: 24px; left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--bg-card); color: var(--text);
-            padding: 14px 28px; border-radius: 10px;
+            padding: 12px 24px; border-radius: 10px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow); z-index: 3000;
-            font-size: 14px; font-weight: 500;
+            font-size: 13px; font-weight: 500;
             opacity: 0; transition: all 0.3s ease;
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 8px;
         }
         .toast.show {
             opacity: 1; transform: translateX(-50%) translateY(0);
         }
         .toast i { color: var(--primary); }
 
-        /* Mobile Nav */
+        /* Mobile Bottom Nav - Scrollable */
         .mobile-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--bg-secondary);
+            background: rgba(26, 26, 26, 0.98);
+            backdrop-filter: blur(20px);
             border-top: 1px solid var(--border);
-            z-index: 999; display: none; padding: 6px 0;
+            z-index: 999;
+            display: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
-        .mobile-nav-items { display: flex; justify-content: space-around; }
+        .mobile-nav::-webkit-scrollbar { display: none; }
+        .mobile-nav-items {
+            display: flex;
+            min-width: max-content;
+            padding: 6px 12px;
+        }
         .mobile-nav-item {
             display: flex; flex-direction: column; align-items: center;
-            gap: 3px; padding: 6px 12px;
+            gap: 3px; padding: 6px 14px; min-width: 64px;
             color: var(--text-muted); text-decoration: none;
             font-size: 10px; transition: var(--transition);
             border: none; background: none; cursor: pointer;
-            font-family: inherit;
+            font-family: inherit; flex-shrink: 0;
         }
-        .mobile-nav-item i { font-size: 18px; }
+        .mobile-nav-item i { font-size: 18px; margin-bottom: 1px; }
         .mobile-nav-item.active { color: var(--primary); }
 
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in { animation: fadeIn 0.5s ease forwards; opacity: 0; }
-        .stagger-1 { animation-delay: 0.05s; }
-        .stagger-2 { animation-delay: 0.1s; }
-        .stagger-3 { animation-delay: 0.15s; }
-        .stagger-4 { animation-delay: 0.2s; }
-        .stagger-5 { animation-delay: 0.25s; }
-        .stagger-6 { animation-delay: 0.3s; }
+        .fade-in { animation: fadeIn 0.45s ease forwards; opacity: 0; }
+        .stagger-1 { animation-delay: 0.04s; }
+        .stagger-2 { animation-delay: 0.08s; }
+        .stagger-3 { animation-delay: 0.12s; }
+        .stagger-4 { animation-delay: 0.16s; }
+        .stagger-5 { animation-delay: 0.20s; }
+        .stagger-6 { animation-delay: 0.24s; }
 
         /* Responsive */
         @media (max-width: 1024px) {
             .hero-title { font-size: 36px; }
-            .detail-hero-content { flex-direction: column; align-items: flex-start; padding: 30px; }
-            .detail-poster { width: 140px; }
-            .detail-title { font-size: 26px; }
+            .detail-hero-content { flex-direction: column; align-items: flex-start; padding: 24px; }
+            .detail-poster { width: 120px; }
+            .detail-title { font-size: 24px; }
         }
         @media (max-width: 768px) {
-            .header-inner { height: 60px; }
+            .header-inner { height: 56px; padding: 0 14px; }
+            .logo { font-size: 18px; }
+            .logo i { font-size: 20px; }
             .nav { display: none; }
-            .search-box { width: 180px; }
-            .mobile-menu-btn { display: block; }
-            .hero { height: 400px; }
-            .hero-title { font-size: 26px; }
-            .movie-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-            .category-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .search-box { width: 150px; }
+            .search-box input { padding: 8px 28px 8px 10px; font-size: 12px; }
+            .hero { height: 380px; }
+            .hero-title { font-size: 24px; }
+            .hero-desc { font-size: 14px; }
+            .movie-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .category-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
             .detail-hero { min-height: auto; }
-            .detail-hero-content { padding: 20px; }
-            .detail-poster { width: 100px; }
-            .detail-title { font-size: 20px; }
-            .detail-body { padding: 0 20px 20px; }
-            .section { padding: 24px 16px; }
-            .mobile-nav { display: block; }
-            .main { margin-bottom: 70px; }
+            .detail-hero-content { padding: 18px; gap: 14px; }
+            .detail-poster { width: 90px; }
+            .detail-title { font-size: 18px; }
+            .detail-body { padding: 0 18px 18px; }
+            .section { padding: 20px 14px; }
+            .mobile-nav { display: flex; }
+            .main { margin-bottom: 64px; }
+            .episode-grid { grid-template-columns: repeat(5, 1fr); gap: 5px; }
+            .modal-content { max-height: 100vh; border-radius: 0; }
+            .modal-overlay { padding: 0; align-items: flex-start; }
+            .modal-overlay.active .modal-content { transform: none; }
         }
         @media (max-width: 480px) {
-            .search-box { width: 140px; }
-            .hero-title { font-size: 22px; }
-            .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .search-box { width: 120px; }
+            .hero-title { font-size: 20px; }
+            .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .category-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             .episode-grid { grid-template-columns: repeat(4, 1fr); }
-            .category-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -660,16 +659,12 @@
             </nav>
 
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm phim..." 
+                <input type="text" id="searchInput" placeholder="Tìm kiếm..." 
                        onkeypress="if(event.key==='Enter') app.search(this.value)">
                 <button onclick="app.search(document.getElementById('searchInput').value)">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-
-            <button class="mobile-menu-btn" onclick="app.toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
     </header>
 
@@ -711,7 +706,7 @@
         </div>
 
         <!-- Content Area -->
-        <div class="section" style="padding-top: 16px;">
+        <div class="section" style="padding-top: 14px;">
             <div id="contentArea">
                 <div class="movie-grid" id="movieGrid">
                     <div class="skeleton-card"><div class="skeleton-poster"></div><div class="skeleton-info"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
@@ -743,20 +738,36 @@
         <span id="toastMessage"></span>
     </div>
 
-    <!-- Mobile Nav -->
-    <nav class="mobile-nav">
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-nav" id="mobileNav">
         <div class="mobile-nav-items">
-            <button class="mobile-nav-item active" onclick="app.goHome()">
-                <i class="fas fa-home"></i><span>Trang chủ</span>
+            <button class="mobile-nav-item active" data-type="home" onclick="app.goHome()">
+                <i class="fas fa-home"></i>
+                <span>Trang chủ</span>
             </button>
-            <button class="mobile-nav-item" onclick="app.setList('phim-le')">
-                <i class="fas fa-film"></i><span>Phim Lẻ</span>
+            <button class="mobile-nav-item" data-type="phim-le" onclick="app.setList('phim-le')">
+                <i class="fas fa-film"></i>
+                <span>Phim Lẻ</span>
             </button>
-            <button class="mobile-nav-item" onclick="app.setList('phim-bo')">
-                <i class="fas fa-tv"></i><span>Phim Bộ</span>
+            <button class="mobile-nav-item" data-type="phim-bo" onclick="app.setList('phim-bo')">
+                <i class="fas fa-tv"></i>
+                <span>Phim Bộ</span>
             </button>
-            <button class="mobile-nav-item" onclick="app.showGenres()">
-                <i class="fas fa-tags"></i><span>Thể loại</span>
+            <button class="mobile-nav-item" data-type="hoat-hinh" onclick="app.setList('hoat-hinh')">
+                <i class="fas fa-dragon"></i>
+                <span>Hoạt Hình</span>
+            </button>
+            <button class="mobile-nav-item" data-type="the-loai" onclick="app.showGenres()">
+                <i class="fas fa-tags"></i>
+                <span>Thể Loại</span>
+            </button>
+            <button class="mobile-nav-item" data-type="quoc-gia" onclick="app.showCountries()">
+                <i class="fas fa-globe"></i>
+                <span>Quốc Gia</span>
+            </button>
+            <button class="mobile-nav-item" data-type="nam" onclick="app.showYears()">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Năm</span>
             </button>
         </div>
     </nav>
@@ -783,6 +794,7 @@
             currentView: 'home',
             currentSlug: '',
             currentType: '',
+            currentName: '',
             searchKeyword: '',
             heroMovie: null,
             categories: [],
@@ -791,31 +803,104 @@
             currentServer: 0,
             currentEpisode: 0,
             hls: null,
+            isModalOpen: false,
 
             init() {
-                this.loadHome();
-                this.loadFilters();
                 this.setupScroll();
                 this.setupHash();
+                this.handleHash();
             },
 
             setupScroll() {
-                window.addEventListener('scroll', () => {
+                window.addEventListener('scroll', function() {
                     const header = document.getElementById('header');
                     header.classList.toggle('scrolled', window.scrollY > 50);
                 });
             },
 
             setupHash() {
-                window.addEventListener('hashchange', () => this.handleHash());
-                if (window.location.hash) this.handleHash();
+                window.addEventListener('hashchange', function() {
+                    app.handleHash();
+                });
             },
 
             handleHash() {
                 const hash = window.location.hash.replace('#', '');
-                if (!hash) return;
-                if (hash.startsWith('phim/')) {
-                    this.showDetailModalBySlug(hash.replace('phim/', ''));
+                if (!hash) {
+                    this.loadHome();
+                    return;
+                }
+
+                const parts = hash.split('?');
+                const path = parts[0];
+                const params = parts[1] ? this.parseParams(parts[1]) : {};
+
+                if (path === '' || path === '/') {
+                    this.loadHome();
+                } else if (path === 'phim-le' || path === 'phim-bo' || path === 'hoat-hinh') {
+                    this.currentPage = parseInt(params.page) || 1;
+                    this.setList(path);
+                } else if (path === 'the-loai') {
+                    this.showGenres();
+                } else if (path === 'quoc-gia') {
+                    this.showCountries();
+                } else if (path === 'nam') {
+                    this.showYears();
+                } else if (path === 'tim-kiem') {
+                    this.currentPage = parseInt(params.page) || 1;
+                    this.search(params.keyword || '');
+                } else if (path.startsWith('the-loai/')) {
+                    const slug = path.replace('the-loai/', '');
+                    this.currentPage = parseInt(params.page) || 1;
+                    const cat = this.categories.find(function(c) { return c.slug === slug; });
+                    this.setGenre(slug, cat ? cat.name : slug);
+                } else if (path.startsWith('quoc-gia/')) {
+                    const slug = path.replace('quoc-gia/', '');
+                    this.currentPage = parseInt(params.page) || 1;
+                    const ctry = this.countries.find(function(c) { return c.slug === slug; });
+                    this.setCountry(slug, ctry ? ctry.name : slug);
+                } else if (path.startsWith('nam/')) {
+                    const year = path.replace('nam/', '');
+                    this.currentPage = parseInt(params.page) || 1;
+                    this.setYear(year);
+                } else if (path.startsWith('phim/')) {
+                    const slug = path.replace('phim/', '');
+                    const sv = params.sv !== undefined ? parseInt(params.sv) : null;
+                    const ep = params.ep !== undefined ? parseInt(params.ep) : null;
+                    this.showDetailModalBySlug(slug, sv, ep);
+                }
+            },
+
+            parseParams(queryString) {
+                const params = {};
+                if (!queryString) return params;
+                queryString.split('&').forEach(function(pair) {
+                    const parts = pair.split('=');
+                    if (parts.length === 2) {
+                        params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+                    }
+                });
+                return params;
+            },
+
+            buildHash(path, params) {
+                let hash = path;
+                const query = [];
+                for (const key in params) {
+                    if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+                        query.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+                    }
+                }
+                if (query.length > 0) {
+                    hash += '?' + query.join('&');
+                }
+                return hash;
+            },
+
+            setHash(path, params) {
+                const hash = this.buildHash(path, params);
+                if (window.location.hash.replace('#', '') !== hash) {
+                    window.location.hash = hash;
                 }
             },
 
@@ -865,6 +950,11 @@
                 this.renderPagination();
             },
 
+            goHome() {
+                this.setHash('', {});
+                this.loadHome();
+            },
+
             renderHero(movie, cdn) {
                 const thumbUrl = this.getImageUrl(movie.thumb_url);
                 document.getElementById('heroBg').style.backgroundImage = 'url(' + thumbUrl + ')';
@@ -894,7 +984,6 @@
                 this.currentView = 'list';
                 this.currentSlug = slug;
                 this.currentType = 'danh-sach';
-                this.currentPage = 1;
                 this.updateNav(slug);
                 this.clearSearch();
 
@@ -902,8 +991,9 @@
                 document.getElementById('breadcrumbSection').style.display = 'block';
 
                 const titles = { 'phim-le': 'Phim Lẻ', 'phim-bo': 'Phim Bộ', 'hoat-hinh': 'Hoạt Hình' };
-                document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-film"></i> ' + titles[slug];
-                this.renderBreadcrumb([{ name: 'Trang chủ', action: 'goHome' }, { name: titles[slug] }]);
+                this.currentName = titles[slug];
+                document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-film"></i> ' + this.currentName;
+                this.renderBreadcrumb([{ name: 'Trang chủ', path: '' }, { name: this.currentName }]);
 
                 await this.loadMovies();
             },
@@ -919,7 +1009,7 @@
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-tags"></i> Thể Loại Phim';
                 document.getElementById('resultCount').textContent = '';
                 document.getElementById('pagination').innerHTML = '';
-                this.renderBreadcrumb([{ name: 'Trang chủ', action: 'goHome' }, { name: 'Thể loại' }]);
+                this.renderBreadcrumb([{ name: 'Trang chủ', path: '' }, { name: 'Thể loại' }]);
 
                 if (this.categories.length === 0) {
                     const data = await this.fetchAPI(API_BASE + '/v1/api/the-loai');
@@ -928,7 +1018,6 @@
 
                 const grid = document.getElementById('movieGrid');
                 grid.className = 'category-grid';
-                const self = this;
                 grid.innerHTML = this.categories.map(function(cat, idx) {
                     return '<div class="category-card fade-in stagger-' + ((idx % 6) + 1) + '" onclick="app.setGenre(' + "'" + cat.slug + "','" + cat.name.replace(/'/g, "\\'") + "')" + '" style="opacity:0;">' +
                         '<i class="fas fa-film"></i>' +
@@ -945,7 +1034,7 @@
                 this.currentView = 'genre';
                 this.currentSlug = slug;
                 this.currentType = 'the-loai';
-                this.currentPage = 1;
+                this.currentName = name;
                 this.updateNav('');
                 this.clearSearch();
 
@@ -953,11 +1042,12 @@
                 document.getElementById('breadcrumbSection').style.display = 'block';
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-tag"></i> Thể Loại: ' + name;
                 this.renderBreadcrumb([
-                    { name: 'Trang chủ', action: 'goHome' },
-                    { name: 'Thể loại', action: 'showGenres' },
+                    { name: 'Trang chủ', path: '' },
+                    { name: 'Thể loại', path: 'the-loai' },
                     { name: name }
                 ]);
 
+                this.setHash('the-loai/' + slug, { page: this.currentPage > 1 ? this.currentPage : undefined });
                 await this.loadMovies();
             },
 
@@ -972,7 +1062,7 @@
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-globe"></i> Quốc Gia';
                 document.getElementById('resultCount').textContent = '';
                 document.getElementById('pagination').innerHTML = '';
-                this.renderBreadcrumb([{ name: 'Trang chủ', action: 'goHome' }, { name: 'Quốc gia' }]);
+                this.renderBreadcrumb([{ name: 'Trang chủ', path: '' }, { name: 'Quốc gia' }]);
 
                 if (this.countries.length === 0) {
                     const data = await this.fetchAPI(API_BASE + '/v1/api/quoc-gia');
@@ -997,7 +1087,7 @@
                 this.currentView = 'country';
                 this.currentSlug = slug;
                 this.currentType = 'quoc-gia';
-                this.currentPage = 1;
+                this.currentName = name;
                 this.updateNav('');
                 this.clearSearch();
 
@@ -1005,11 +1095,12 @@
                 document.getElementById('breadcrumbSection').style.display = 'block';
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-flag"></i> Quốc Gia: ' + name;
                 this.renderBreadcrumb([
-                    { name: 'Trang chủ', action: 'goHome' },
-                    { name: 'Quốc gia', action: 'showCountries' },
+                    { name: 'Trang chủ', path: '' },
+                    { name: 'Quốc gia', path: 'quoc-gia' },
                     { name: name }
                 ]);
 
+                this.setHash('quoc-gia/' + slug, { page: this.currentPage > 1 ? this.currentPage : undefined });
                 await this.loadMovies();
             },
 
@@ -1024,7 +1115,7 @@
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-calendar-alt"></i> Năm Phát Hành';
                 document.getElementById('resultCount').textContent = '';
                 document.getElementById('pagination').innerHTML = '';
-                this.renderBreadcrumb([{ name: 'Trang chủ', action: 'goHome' }, { name: 'Năm' }]);
+                this.renderBreadcrumb([{ name: 'Trang chủ', path: '' }, { name: 'Năm' }]);
 
                 const currentYear = new Date().getFullYear();
                 const years = [];
@@ -1048,7 +1139,7 @@
                 this.currentView = 'year';
                 this.currentSlug = year;
                 this.currentType = 'nam';
-                this.currentPage = 1;
+                this.currentName = year;
                 this.updateNav('');
                 this.clearSearch();
 
@@ -1056,11 +1147,12 @@
                 document.getElementById('breadcrumbSection').style.display = 'block';
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-calendar"></i> Năm: ' + year;
                 this.renderBreadcrumb([
-                    { name: 'Trang chủ', action: 'goHome' },
-                    { name: 'Năm', action: 'showYears' },
+                    { name: 'Trang chủ', path: '' },
+                    { name: 'Năm', path: 'nam' },
                     { name: year }
                 ]);
 
+                this.setHash('nam/' + year, { page: this.currentPage > 1 ? this.currentPage : undefined });
                 await this.loadMovies();
             },
 
@@ -1076,7 +1168,7 @@
                 } else if (this.currentType === 'quoc-gia') {
                     url = API_BASE + '/v1/api/quoc-gia/' + this.currentSlug + '?page=' + this.currentPage;
                 } else if (this.currentType === 'nam') {
-                    url = API_BASE + '/v1/api/danh-sach/phim-moi-cap-nhat?page=' + this.currentPage + '&year=' + this.currentSlug;
+                    url = API_BASE + '/v1/api/nam/' + this.currentSlug + '?page=' + this.currentPage;
                 } else {
                     url = API_BASE + '/v1/api/danh-sach/' + this.currentSlug + '?page=' + this.currentPage;
                 }
@@ -1175,6 +1267,24 @@
             goPage(page) {
                 if (page < 1 || page > this.totalPages) return;
                 this.currentPage = page;
+
+                let path = '';
+                let params = { page: page > 1 ? page : undefined };
+
+                if (this.currentView === 'list') {
+                    path = this.currentSlug;
+                } else if (this.currentView === 'genre') {
+                    path = 'the-loai/' + this.currentSlug;
+                } else if (this.currentView === 'country') {
+                    path = 'quoc-gia/' + this.currentSlug;
+                } else if (this.currentView === 'year') {
+                    path = 'nam/' + this.currentSlug;
+                } else if (this.currentView === 'search') {
+                    path = 'tim-kiem';
+                    params.keyword = this.searchKeyword;
+                }
+
+                this.setHash(path, params);
                 this.loadMovies();
             },
 
@@ -1193,8 +1303,9 @@
                 document.getElementById('heroSection').style.display = 'none';
                 document.getElementById('breadcrumbSection').style.display = 'block';
                 document.getElementById('sectionTitle').innerHTML = '<i class="fas fa-search"></i> Kết quả: "' + this.searchKeyword + '"';
-                this.renderBreadcrumb([{ name: 'Trang chủ', action: 'goHome' }, { name: 'Tìm kiếm: ' + this.searchKeyword }]);
+                this.renderBreadcrumb([{ name: 'Trang chủ', path: '' }, { name: 'Tìm kiếm: ' + this.searchKeyword }]);
 
+                this.setHash('tim-kiem', { keyword: this.searchKeyword, page: undefined });
                 await this.loadMovies();
             },
 
@@ -1203,21 +1314,21 @@
             },
 
             // ========== DETAIL MODAL ==========
-            async showDetailModalBySlug(slug) {
+            async showDetailModalBySlug(slug, sv, ep) {
                 this.showToast('Đang tải thông tin phim...');
                 const data = await this.fetchAPI(API_BASE + '/v1/api/phim/' + slug);
                 if (!data || !data.data) return;
 
                 const movie = data.data.item;
                 movie.APP_DOMAIN_CDN_IMAGE = data.data.APP_DOMAIN_CDN_IMAGE;
-                this.showDetailModal(movie);
-                window.location.hash = 'phim/' + slug;
+                this.showDetailModal(movie, sv, ep);
             },
 
-            showDetailModal(movie) {
+            showDetailModal(movie, sv, ep) {
                 this.currentMovie = movie;
-                this.currentServer = 0;
-                this.currentEpisode = 0;
+                this.currentServer = sv !== null && sv !== undefined ? sv : 0;
+                this.currentEpisode = ep !== null && ep !== undefined ? ep : 0;
+                this.isModalOpen = true;
 
                 const cdn = movie.APP_DOMAIN_CDN_IMAGE || CDN_IMAGE;
                 const posterUrl = this.getImageUrl(movie.poster_url);
@@ -1251,15 +1362,17 @@
                 if (hasEpisodes) {
                     episodesHtml += '<div class="server-tabs">';
                     episodes.forEach(function(server, idx) {
-                        episodesHtml += '<button class="server-tab ' + (idx === 0 ? 'active' : '') + '" onclick="app.switchServer(' + idx + ')">' + server.server_name + '</button>';
+                        episodesHtml += '<button class="server-tab ' + (idx === app.currentServer ? 'active' : '') + '" onclick="app.switchServer(' + idx + ')">' + server.server_name + '</button>';
                     });
                     episodesHtml += '</div>';
 
                     episodesHtml += '<div class="episode-grid" id="episodeGrid">';
-                    const server = episodes[0];
-                    server.server_data.forEach(function(ep, idx) {
-                        episodesHtml += '<button class="episode-btn ' + (idx === 0 ? 'active' : '') + '" onclick="app.playEpisode(' + idx + ')">' + ep.name + '</button>';
-                    });
+                    const server = episodes[this.currentServer];
+                    if (server && server.server_data) {
+                        server.server_data.forEach(function(episode, idx) {
+                            episodesHtml += '<button class="episode-btn ' + (idx === app.currentEpisode ? 'active' : '') + '" onclick="app.playEpisode(' + idx + ')">' + episode.name + '</button>';
+                        });
+                    }
                     episodesHtml += '</div>';
                 }
 
@@ -1316,9 +1429,21 @@
                 document.getElementById('detailModal').classList.add('active');
                 document.body.style.overflow = 'hidden';
 
+                this.updateDetailHash();
+
                 if (hasEpisodes) {
-                    setTimeout(function() { self.playEpisode(0); }, 300);
+                    var self2 = this;
+                    setTimeout(function() { self2.playCurrent(); }, 300);
                 }
+            },
+
+            updateDetailHash() {
+                if (!this.currentMovie) return;
+                const slug = this.currentMovie.slug;
+                const params = {};
+                if (this.currentServer > 0) params.sv = this.currentServer;
+                if (this.currentEpisode > 0) params.ep = this.currentEpisode;
+                this.setHash('phim/' + slug, params);
             },
 
             switchServer(serverIdx) {
@@ -1332,9 +1457,11 @@
 
                 const server = this.currentMovie.episodes[serverIdx];
                 const grid = document.getElementById('episodeGrid');
-                grid.innerHTML = server.server_data.map(function(ep, idx) {
-                    return '<button class="episode-btn ' + (idx === 0 ? 'active' : '') + '" onclick="app.playEpisode(' + idx + ')">' + ep.name + '</button>';
-                }).join('');
+                if (server && server.server_data) {
+                    grid.innerHTML = server.server_data.map(function(ep, idx) {
+                        return '<button class="episode-btn ' + (idx === 0 ? 'active' : '') + '" onclick="app.playEpisode(' + idx + ')">' + ep.name + '</button>';
+                    }).join('');
+                }
 
                 this.playEpisode(0);
             },
@@ -1352,9 +1479,11 @@
 
             playCurrent() {
                 const server = this.currentMovie.episodes[this.currentServer];
+                if (!server || !server.server_data) return;
                 const ep = server.server_data[this.currentEpisode];
-                const video = document.getElementById('videoPlayer');
+                if (!ep) return;
 
+                const video = document.getElementById('videoPlayer');
                 if (!video) return;
 
                 if (this.hls) {
@@ -1394,12 +1523,14 @@
                     this.showToast('Trình duyệt không hỗ trợ phát HLS');
                 }
 
+                this.updateDetailHash();
                 video.scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
 
             closeModal() {
                 document.getElementById('detailModal').classList.remove('active');
                 document.body.style.overflow = '';
+                this.isModalOpen = false;
 
                 if (this.hls) {
                     this.hls.destroy();
@@ -1411,7 +1542,20 @@
                     video.src = '';
                     video.load();
                 }
-                window.location.hash = '';
+
+                if (this.currentView === 'home') {
+                    this.setHash('', {});
+                } else if (this.currentView === 'list') {
+                    this.setHash(this.currentSlug, { page: this.currentPage > 1 ? this.currentPage : undefined });
+                } else if (this.currentView === 'genre') {
+                    this.setHash('the-loai/' + this.currentSlug, { page: this.currentPage > 1 ? this.currentPage : undefined });
+                } else if (this.currentView === 'country') {
+                    this.setHash('quoc-gia/' + this.currentSlug, { page: this.currentPage > 1 ? this.currentPage : undefined });
+                } else if (this.currentView === 'year') {
+                    this.setHash('nam/' + this.currentSlug, { page: this.currentPage > 1 ? this.currentPage : undefined });
+                } else if (this.currentView === 'search') {
+                    this.setHash('tim-kiem', { keyword: this.searchKeyword, page: this.currentPage > 1 ? this.currentPage : undefined });
+                }
             },
 
             // ========== BREADCRUMB ==========
@@ -1420,13 +1564,25 @@
                 let html = '';
                 items.forEach(function(item, idx) {
                     if (idx > 0) html += '<i class="fas fa-chevron-right"></i>';
-                    if (item.action) {
-                        html += '<a href="#" onclick="app.' + item.action + '(); return false;">' + item.name + '</a>';
+                    if (item.path !== undefined) {
+                        html += '<a href="#' + item.path + '" onclick="app.navigateBreadcrumb(' + "'" + item.path + "'" + '); return false;">' + item.name + '</a>';
                     } else {
                         html += '<span>' + item.name + '</span>';
                     }
                 });
                 container.innerHTML = html;
+            },
+
+            navigateBreadcrumb(path) {
+                if (!path || path === '') {
+                    this.goHome();
+                } else if (path === 'the-loai') {
+                    this.showGenres();
+                } else if (path === 'quoc-gia') {
+                    this.showCountries();
+                } else if (path === 'nam') {
+                    this.showYears();
+                }
             },
 
             // ========== FILTERS ==========
@@ -1447,15 +1603,9 @@
                 document.querySelectorAll('.nav-btn').forEach(function(btn) {
                     btn.classList.toggle('active', btn.dataset.type === type);
                 });
-                document.querySelectorAll('.mobile-nav-item').forEach(function(btn, idx) {
-                    const types = ['home', 'phim-le', 'phim-bo', 'the-loai'];
-                    btn.classList.toggle('active', types[idx] === type);
+                document.querySelectorAll('.mobile-nav-item').forEach(function(btn) {
+                    btn.classList.toggle('active', btn.dataset.type === type);
                 });
-            },
-
-            goHome() {
-                this.loadHome();
-                return false;
             },
 
             showLoading() {
@@ -1483,11 +1633,6 @@
                 }).catch(function() {
                     app.showToast('Không thể sao chép link');
                 });
-            },
-
-            toggleMobileMenu() {
-                const nav = document.getElementById('desktopNav');
-                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
             }
         };
 
