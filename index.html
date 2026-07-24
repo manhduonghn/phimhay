@@ -102,13 +102,6 @@
                 padding-left: 1rem !important;
                 padding-right: 1rem !important;
             }
-            /* Ẩn bớt nội dung không cần thiết trên ngang */
-            .hidden-landscape\:block {
-                display: block !important;
-            }
-            .hidden-landscape\:hidden {
-                display: none !important;
-            }
         }
 
         @media (max-width: 640px) {
@@ -134,14 +127,12 @@
             }
         }
 
-        /* Landscape điện thoại: hiển thị 3 cột */
         @media (min-width: 641px) and (max-width: 820px) and (orientation: landscape) {
             .grid-cols-2 {
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             }
         }
 
-        /* Máy tính bảng nhỏ / điện thoại lớn */
         @media (min-width: 768px) {
             .grid-cols-2 {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -163,43 +154,28 @@
             }
         }
 
-        /* Dropdown trên desktop không bị tràn */
+        /* Dropdown menu */
         .dropdown-menu {
             max-height: 70vh;
             overflow-y: auto;
         }
-
-        /* Cải thiện nút xem phim */
-        .btn-play {
-            transition: all 0.2s ease;
-        }
-        .btn-play:hover {
-            transform: scale(1.05);
-        }
-
-        /* Làm mịn card */
-        .movie-card {
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-        }
-        .movie-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px -12px rgba(229, 9, 20, 0.25);
-            border-color: rgba(229, 9, 20, 0.5);
-        }
-        .movie-card img {
-            transition: transform 0.6s ease;
-        }
-        .movie-card:hover img {
-            transform: scale(1.08);
-        }
-
-        /* Ẩn thanh cuộn cho menu dropdown */
         .dropdown-scroll::-webkit-scrollbar {
             width: 3px;
         }
         .dropdown-scroll::-webkit-scrollbar-thumb {
             background: #475569;
             border-radius: 10px;
+        }
+
+        /* Accordion mobile */
+        .accordion-content {
+            transition: all 0.2s ease;
+        }
+        .accordion-toggle .lucide-chevron-down {
+            transition: transform 0.2s ease;
+        }
+        .accordion-toggle.open .lucide-chevron-down {
+            transform: rotate(180deg);
         }
     </style>
 </head>
@@ -259,11 +235,12 @@
             </a>
         </nav>
 
-        <!-- Search + Mobile Toggle -->
+        <!-- Mobile Search (chỉ hiển thị trên mobile dọc) + Menu Toggle -->
         <div class="flex items-center gap-2 flex-1 md:flex-none justify-end">
-            <form id="search-form" class="relative flex-1 max-w-[140px] sm:max-w-xs hidden sm:block">
-                <input type="text" id="search-input" placeholder="Tìm phim..."
-                       class="w-full bg-slate-900/80 text-sm text-slate-200 pl-8 pr-3 py-1.5 md:py-2 rounded-full border border-slate-700/60 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition placeholder:text-slate-500">
+            <!-- Ô tìm kiếm trên mobile (dọc) -->
+            <form id="search-form-mobile-header" class="relative flex-1 max-w-[130px] sm:max-w-xs block md:hidden">
+                <input type="text" id="search-input-mobile-header" placeholder="Tìm phim..."
+                       class="w-full bg-slate-900/80 text-sm text-slate-200 pl-8 pr-3 py-1.5 rounded-full border border-slate-700/60 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition placeholder:text-slate-500">
                 <i data-lucide="search" class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
             </form>
 
@@ -283,22 +260,51 @@
         <a href="#/danh-sach/phim-le" class="block py-2 text-sm font-medium hover:text-brand">Phim Lẻ</a>
         <a href="#/danh-sach/phim-chieu-rap" class="block py-2 text-sm font-medium hover:text-brand">Phim Chiếu Rạp</a>
         <a href="#/danh-sach/hoat-hinh" class="block py-2 text-sm font-medium hover:text-brand">Hoạt Hình</a>
-        
-        <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Thể Loại</div>
-        <div id="mobile-theloai" class="grid grid-cols-2 gap-1"></div>
-        
-        <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Quốc Gia</div>
-        <div id="mobile-quocgia" class="grid grid-cols-2 gap-1"></div>
 
-        <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Năm Phát Hành</div>
-        <div id="mobile-nam" class="grid grid-cols-3 gap-1"></div>
+        <!-- Accordion: Thể Loại -->
+        <div class="accordion">
+            <button class="accordion-toggle w-full text-left py-2 text-sm font-medium hover:text-brand flex justify-between items-center border-t border-slate-800 pt-3">
+                <span>Thể Loại</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+            </button>
+            <div class="accordion-content hidden pl-2 grid grid-cols-2 gap-1 pb-2 mobile-theloai-content"></div>
+        </div>
 
-        <form id="search-form-mobile" class="pt-2">
-            <input type="text" id="search-input-mobile" placeholder="Tìm phim..."
+        <!-- Accordion: Quốc Gia -->
+        <div class="accordion">
+            <button class="accordion-toggle w-full text-left py-2 text-sm font-medium hover:text-brand flex justify-between items-center border-t border-slate-800 pt-3">
+                <span>Quốc Gia</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+            </button>
+            <div class="accordion-content hidden pl-2 grid grid-cols-2 gap-1 pb-2 mobile-quocgia-content"></div>
+        </div>
+
+        <!-- Accordion: Năm -->
+        <div class="accordion">
+            <button class="accordion-toggle w-full text-left py-2 text-sm font-medium hover:text-brand flex justify-between items-center border-t border-slate-800 pt-3">
+                <span>Năm Phát Hành</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+            </button>
+            <div class="accordion-content hidden pl-2 grid grid-cols-3 gap-1 pb-2 mobile-nam-content"></div>
+        </div>
+
+        <form id="search-form-mobile-menu" class="pt-2 border-t border-slate-800">
+            <input type="text" id="search-input-mobile-menu" placeholder="Tìm phim..."
                    class="w-full bg-slate-800 text-sm text-slate-200 px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-brand">
         </form>
     </div>
 </header>
+
+<!-- ===== THANH TÌM KIẾM MÀN HÌNH LỚN / NGANG ===== -->
+<div class="hidden md:block bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/70 py-2 sticky top-14 md:top-16 z-40">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <form id="search-form-desktop" class="relative max-w-md mx-auto">
+            <input type="text" id="search-input-desktop" placeholder="Tìm phim..."
+                   class="w-full bg-slate-900/80 text-sm text-slate-200 pl-9 pr-4 py-2 rounded-full border border-slate-700/60 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition placeholder:text-slate-500">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+        </form>
+    </div>
+</div>
 
 <!-- ===== MAIN CONTENT ===== -->
 <main id="app-content" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-8 py-4 md:py-6 animate-fade-in">
@@ -340,7 +346,7 @@
             });
         }
 
-        // --- HÀM XỬ LÝ LỊCH SỬ XEM PHIM ---
+        // --- LỊCH SỬ XEM PHIM ---
         function getWatchHistory() {
             try {
                 return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
@@ -503,7 +509,7 @@
                         return `<a href="#/the-loai/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors">${name}</a>`;
                     }).filter(Boolean).join('');
                     document.getElementById('dropdown-theloai').innerHTML = html;
-                    document.getElementById('mobile-theloai').innerHTML = html;
+                    document.querySelector('.mobile-theloai-content').innerHTML = html;
                 }
 
                 // 2. Quốc Gia
@@ -515,7 +521,7 @@
                         return `<a href="#/quoc-gia/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors">${name}</a>`;
                     }).filter(Boolean).join('');
                     document.getElementById('dropdown-quocgia').innerHTML = html;
-                    document.getElementById('mobile-quocgia').innerHTML = html;
+                    document.querySelector('.mobile-quocgia-content').innerHTML = html;
                 }
 
                 // 3. Năm Phát Hành
@@ -527,8 +533,24 @@
                         return `<a href="#/nam/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors text-center">${name}</a>`;
                     }).filter(Boolean).join('');
                     document.getElementById('dropdown-nam').innerHTML = html;
-                    document.getElementById('mobile-nam').innerHTML = html;
+                    document.querySelector('.mobile-nam-content').innerHTML = html;
                 }
+
+                // Kích hoạt accordion cho mobile
+                document.querySelectorAll('.accordion-toggle').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const content = this.nextElementSibling;
+                        const isOpen = content.classList.contains('hidden');
+                        // Đóng tất cả các accordion khác (tuỳ chọn)
+                        // Để mở rộng độc lập, ta chỉ toggle content của nó
+                        content.classList.toggle('hidden');
+                        this.classList.toggle('open');
+                        // Cập nhật icon (lucide sẽ tự động cập nhật sau khi thay đổi class)
+                        lucide.createIcons();
+                    });
+                });
+
             } catch (e) {
                 console.error('Lỗi nạp menu:', e);
             }
@@ -655,7 +677,7 @@
             }
         }
 
-        // TRANG LỊCH SỬ XEM PHIM (URL: #/lich-su)
+        // TRANG LỊCH SỬ XEM PHIM
         async function viewHistory() {
             const historyMap = getWatchHistory();
             const items = Object.values(historyMap).sort((a, b) => b.updatedAt - a.updatedAt);
@@ -748,12 +770,11 @@
                     const slug = btn.getAttribute('data-remove-slug');
                     if (slug) {
                         removeHistoryItem(slug);
-                        viewHistory(); // Re-render
+                        viewHistory();
                     }
                 });
             });
 
-            // Sự kiện Xóa toàn bộ
             const btnClearAll = document.getElementById('btn-clear-all-history');
             if (btnClearAll) {
                 btnClearAll.addEventListener('click', () => {
@@ -787,7 +808,6 @@
             const activeServerIdx = parseInt(queryParams.sv || '0', 10);
             const startTime = parseFloat(queryParams.t || '0');
 
-            // Kiểm tra Lịch Sử của Phim này
             const savedHistory = getWatchHistory()[slug];
 
             let currentPlayingEp = null;
@@ -795,7 +815,6 @@
                 currentPlayingEp = episodes[activeServerIdx].server_data.find(e => e.slug === activeEpSlug);
             }
 
-            // Xây dựng nút Continue Xem Phim nếu có trong lịch sử
             let continueBanner = '';
             if (savedHistory && !currentPlayingEp) {
                 const targetUrl = `#/phim/${movie.slug}?ep=${savedHistory.ep_slug}&sv=${savedHistory.server_idx}&t=${Math.floor(savedHistory.currentTime)}`;
@@ -828,7 +847,6 @@
 
                 ${continueBanner}
 
-                <!-- KHU VỰC PLAYER / BANNER -->
                 <div id="media-container" class="w-full rounded-xl md:rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
                     ${currentPlayingEp ? `
                         <div class="aspect-video w-full bg-black relative">
@@ -854,7 +872,6 @@
                     <div class="lg:col-span-2 space-y-4 md:space-y-6">
                         ${episodes.length > 0 ? `
                             <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-xl md:rounded-2xl p-3 md:p-5 space-y-3 md:space-y-4">
-                                <!-- DANH SÁCH SERVER -->
                                 <div class="flex items-center gap-1.5 border-b border-slate-800 pb-2.5 overflow-x-auto">
                                     <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 mr-1 shrink-0">📡 Server:</span>
                                     ${episodes.map((s, i) => {
@@ -863,7 +880,6 @@
                                     }).join('')}
                                 </div>
 
-                                <!-- DANH SÁCH TẬP PHIM -->
                                 <div>
                                     <h3 class="text-xs sm:text-sm font-bold text-slate-300 mb-2">📂 Danh sách tập</h3>
                                     <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-1.5 sm:gap-2 max-h-48 md:max-h-60 overflow-y-auto pr-1">
@@ -913,7 +929,6 @@
             document.getElementById('app-content').innerHTML = html;
             lucide.createIcons();
 
-            // Tải Trình Phát Video
             if (currentPlayingEp && currentPlayingEp.link_m3u8) {
                 const currentServerName = episodes[activeServerIdx]?.server_name || 'Server HD';
                 const currentEpName = currentPlayingEp.name || 'Tập phim';
@@ -934,7 +949,6 @@
             }
         }
 
-        // HLS Player qua Proxy + Tự động lưu tiến trình Lịch Sử
         function initHlsPlayer(url, startTime = 0, movieMeta = null) {
             const video = document.getElementById('hls-player');
             if (!video) return;
@@ -942,7 +956,6 @@
             const proxiedUrl = `/proxy-stream?url=${encodeURIComponent(url)}`;
             if (currentHls) currentHls.destroy();
 
-            // Hàm seek đến vị trí lịch sử khi video đã tải đủ dữ liệu
             let initialSeekDone = false;
             const applyStartTime = () => {
                 if (!initialSeekDone && startTime > 0) {
@@ -967,7 +980,6 @@
                 });
             }
 
-            // Tự động lưu Lịch sử xem phim liên tục
             if (movieMeta) {
                 let lastSaved = 0;
                 const updateHistory = () => {
@@ -982,7 +994,7 @@
 
                 video.ontimeupdate = () => {
                     const now = Date.now();
-                    if (now - lastSaved > 3000) { // Lưu mỗi 3 giây
+                    if (now - lastSaved > 3000) {
                         lastSaved = now;
                         updateHistory();
                     }
@@ -993,12 +1005,11 @@
             }
         }
 
-        // ========== ROUTER XỬ LÝ ĐƯỜNG DẪN ==========
+        // ========== ROUTER ==========
         async function router() {
             closeMobileMenu();
             if (currentHls) { currentHls.destroy(); currentHls = null; }
 
-            // TỰ ĐỘNG CUỘN LÊN ĐẦU TRANG
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             const { route, subRoute, queryParams } = parseHash();
@@ -1046,27 +1057,27 @@
             loadHeaderMenus();
             router();
 
-            document.getElementById('mobile-menu').addEventListener('click', (e) => {
-                if (e.target.closest('a')) {
-                    closeMobileMenu();
+            // Sự kiện cho các form tìm kiếm
+            const searchForms = [
+                { formId: 'search-form-mobile-header', inputId: 'search-input-mobile-header' },
+                { formId: 'search-form-mobile-menu', inputId: 'search-input-mobile-menu' },
+                { formId: 'search-form-desktop', inputId: 'search-input-desktop' }
+            ];
+            searchForms.forEach(({ formId, inputId }) => {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const kw = document.getElementById(inputId).value.trim();
+                        if (kw) {
+                            window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
+                            closeMobileMenu();
+                        }
+                    });
                 }
             });
 
-            document.getElementById('search-form').addEventListener('submit', e => {
-                e.preventDefault();
-                const kw = document.getElementById('search-input').value.trim();
-                if (kw) window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
-            });
-
-            document.getElementById('search-form-mobile').addEventListener('submit', e => {
-                e.preventDefault();
-                const kw = document.getElementById('search-input-mobile').value.trim();
-                if (kw) {
-                    window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
-                    closeMobileMenu();
-                }
-            });
-
+            // Mobile menu toggle
             const menuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             menuBtn.addEventListener('click', () => {
@@ -1080,6 +1091,14 @@
                 lucide.createIcons();
             });
 
+            // Đóng menu khi click vào link bên trong
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target.closest('a')) {
+                    closeMobileMenu();
+                }
+            });
+
+            // Back to top
             const backBtn = document.getElementById('back-to-top');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 400) {
