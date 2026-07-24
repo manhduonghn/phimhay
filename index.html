@@ -29,8 +29,7 @@
                     },
                     animation: {
                         'shimmer': 'shimmer 2s infinite linear',
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.4s ease-out'
+                        'fade-in': 'fadeIn 0.5s ease-out'
                     },
                     keyframes: {
                         shimmer: {
@@ -40,10 +39,6 @@
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
                 }
@@ -106,37 +101,39 @@
 
         <!-- Desktop Nav -->
         <nav class="hidden md:flex items-center gap-5 text-sm font-medium text-slate-300">
-            <a href="#/" class="hover:text-brand transition relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-brand after:transition-all">Trang Chủ</a>
+            <a href="#/" class="hover:text-brand transition">Trang Chủ</a>
             <a href="#/danh-sach/phim-bo" class="hover:text-brand transition">Phim Bộ</a>
             <a href="#/danh-sach/phim-le" class="hover:text-brand transition">Phim Lẻ</a>
             <a href="#/danh-sach/phim-chieu-rap" class="hover:text-brand transition">Phim Chiếu Rạp</a>
             <a href="#/danh-sach/hoat-hinh" class="hover:text-brand transition">Hoạt Hình</a>
-            <a href="#/danh-sach/tv-shows" class="hover:text-brand transition">TV Shows</a>
 
-            <!-- Dropdown Thể Loại -->
+            <!-- Dropdown Thể Loại (https://phimapi.com/the-loai) -->
             <div class="relative group py-4">
                 <button class="flex items-center gap-1 hover:text-brand transition">
                     Thể Loại <i data-lucide="chevron-down" class="w-4 h-4"></i>
                 </button>
                 <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 grid grid-cols-3 gap-1 w-80 p-3 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl max-h-80 overflow-y-auto" id="dropdown-theloai">
+                    <span class="col-span-3 text-xs text-slate-500 text-center py-2">Đang tải...</span>
                 </div>
             </div>
 
-            <!-- Dropdown Quốc Gia -->
+            <!-- Dropdown Quốc Gia (https://phimapi.com/quoc-gia) -->
             <div class="relative group py-4">
                 <button class="flex items-center gap-1 hover:text-brand transition">
                     Quốc Gia <i data-lucide="chevron-down" class="w-4 h-4"></i>
                 </button>
                 <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 grid grid-cols-2 gap-1 w-64 p-3 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl max-h-80 overflow-y-auto" id="dropdown-quocgia">
+                    <span class="col-span-2 text-xs text-slate-500 text-center py-2">Đang tải...</span>
                 </div>
             </div>
 
-            <!-- Dropdown Năm -->
+            <!-- Dropdown Năm (https://phimapi.com/nam-phat-hanh) -->
             <div class="relative group py-4">
                 <button class="flex items-center gap-1 hover:text-brand transition">
                     Năm <i data-lucide="chevron-down" class="w-4 h-4"></i>
                 </button>
                 <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 grid grid-cols-3 gap-1 w-60 p-3 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl max-h-72 overflow-y-auto" id="dropdown-nam">
+                    <span class="col-span-3 text-xs text-slate-500 text-center py-2">Đang tải...</span>
                 </div>
             </div>
         </nav>
@@ -162,7 +159,6 @@
         <a href="#/danh-sach/phim-le" class="block py-2 text-sm font-medium hover:text-brand">Phim Lẻ</a>
         <a href="#/danh-sach/phim-chieu-rap" class="block py-2 text-sm font-medium hover:text-brand">Phim Chiếu Rạp</a>
         <a href="#/danh-sach/hoat-hinh" class="block py-2 text-sm font-medium hover:text-brand">Hoạt Hình</a>
-        <a href="#/danh-sach/tv-shows" class="block py-2 text-sm font-medium hover:text-brand">TV Shows</a>
         
         <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Thể Loại</div>
         <div id="mobile-theloai" class="grid grid-cols-2 gap-1"></div>
@@ -209,7 +205,7 @@
         let yearsCache = [];
         let homeSwiper = null;
 
-        // --- 1. ĐĂNG KÝ SERVICE WORKER ---
+        // Đăng ký Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
@@ -236,6 +232,15 @@
                 param: parts[2] || '',
                 queryParams: Object.fromEntries(params.entries())
             };
+        };
+
+        // Bóc tách mảng an toàn từ các kiểu response của API
+        const extractArray = (res) => {
+            if (!res) return [];
+            if (Array.isArray(res)) return res;
+            if (Array.isArray(res.data)) return res.data;
+            if (Array.isArray(res.data?.items)) return res.data.items;
+            return [];
         };
 
         function showSkeleton() {
@@ -290,36 +295,40 @@
             </a>`;
         }
 
-        // ========== DATA LOADING ==========
+        // ========== NẠP MENUS DROPDOWN (Thể loại, Quốc gia, Năm) ==========
         async function loadHeaderMenus() {
             try {
                 const [catRes, counRes, yearRes] = await Promise.all([
-                    fetch(`${API_BASE}/the-loai`).then(r => r.json()),
-                    fetch(`${API_BASE}/quoc-gia`).then(r => r.json()),
-                    fetch(`${API_BASE}/nam-phat-hanh`).then(r => r.json())
+                    fetch(`${API_BASE}/the-loai`).then(r => r.json()).catch(() => []),
+                    fetch(`${API_BASE}/quoc-gia`).then(r => r.json()).catch(() => []),
+                    fetch(`${API_BASE}/nam-phat-hanh`).then(r => r.json()).catch(() => [])
                 ]);
 
-                if (catRes) {
-                    categoriesCache = catRes;
-                    const html = catRes.map(c =>
+                categoriesCache = extractArray(catRes);
+                countriesCache = extractArray(counRes);
+                yearsCache = extractArray(yearRes);
+
+                // 1. Thể Loại (/the-loai)
+                if (categoriesCache.length > 0) {
+                    const html = categoriesCache.map(c =>
                         `<a href="#/the-loai/${c.slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors">${c.name}</a>`
                     ).join('');
                     document.getElementById('dropdown-theloai').innerHTML = html;
                     document.getElementById('mobile-theloai').innerHTML = html;
                 }
 
-                if (counRes) {
-                    countriesCache = counRes;
-                    const html = counRes.map(c =>
+                // 2. Quốc Gia (/quoc-gia)
+                if (countriesCache.length > 0) {
+                    const html = countriesCache.map(c =>
                         `<a href="#/quoc-gia/${c.slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors">${c.name}</a>`
                     ).join('');
                     document.getElementById('dropdown-quocgia').innerHTML = html;
                     document.getElementById('mobile-quocgia').innerHTML = html;
                 }
 
-                if (yearRes) {
-                    yearsCache = yearRes;
-                    const html = yearRes.map(y => {
+                // 3. Năm Phát Hành (/nam-phat-hanh)
+                if (yearsCache.length > 0) {
+                    const html = yearsCache.map(y => {
                         const slug = typeof y === 'object' ? (y.slug || y.name) : y;
                         const name = typeof y === 'object' ? y.name : y;
                         return `<a href="#/nam/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors text-center">${name}</a>`;
@@ -396,13 +405,15 @@
             }
         }
 
-        async function viewCatalog(endpointUrl, title, hashPrefix) {
+        async function viewCatalog(endpointUrl, fallbackTitle, hashPrefix) {
             showSkeleton();
             try {
                 const res = await fetch(endpointUrl).then(r => r.json());
                 const data = res?.data || res;
                 const items = data.items || [];
                 const pagination = data.params?.pagination;
+                // Ưu tiên tiêu đề chuẩn do API trả về (data.titlePage)
+                const title = data.titlePage || fallbackTitle;
 
                 const html = `
                 <div class="space-y-6 animate-fade-in">
@@ -421,7 +432,7 @@
                 document.getElementById('app-content').innerHTML = html;
                 lucide.createIcons();
             } catch (err) {
-                document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải danh sách.</p>';
+                document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải danh sách phim.</p>';
             }
         }
 
@@ -566,12 +577,11 @@
             }
         }
 
-        // --- 2. TÍCH HỢP PROXY SERVICE WORKER VÀO HLS PLAYER ---
+        // HLS Player qua Proxy Service Worker
         function initHlsPlayer(url) {
             const video = document.getElementById('hls-player');
             if (!video) return;
 
-            // Chuyển link m3u8 qua Proxy Service Worker
             const proxiedUrl = `/proxy-stream?url=${encodeURIComponent(url)}`;
 
             if (currentHls) currentHls.destroy();
@@ -587,7 +597,7 @@
             }
         }
 
-        // ========== ROUTER ==========
+        // ========== ROUTER XỬ LÝ ĐƯỜNG DẪN ==========
         async function router() {
             if (currentHls) { currentHls.destroy(); currentHls = null; }
             const { route, subRoute, queryParams } = parseHash();
@@ -604,14 +614,19 @@
                     'tv-shows': 'TV Shows' 
                 };
                 await viewCatalog(`${API_BASE}/v1/api/danh-sach/${subRoute}?page=${page}`, titles[subRoute] || 'Danh Sách', `#/danh-sach/${subRoute}?`);
+
+            // Xử lý Thể Loại: https://phimapi.com/v1/api/the-loai/{subRoute}?page=1
             } else if (route === 'the-loai') {
-                const name = categoriesCache.find(c => c.slug === subRoute)?.name || subRoute;
-                await viewCatalog(`${API_BASE}/v1/api/the-loai/${subRoute}?page=${page}`, `Thể loại: ${name}`, `#/the-loai/${subRoute}?`);
+                await viewCatalog(`${API_BASE}/v1/api/the-loai/${subRoute}?page=${page}`, `Thể loại: ${subRoute}`, `#/the-loai/${subRoute}?`);
+
+            // Xử lý Quốc Gia: https://phimapi.com/v1/api/quoc-gia/{subRoute}?page=1
             } else if (route === 'quoc-gia') {
-                const name = countriesCache.find(c => c.slug === subRoute)?.name || subRoute;
-                await viewCatalog(`${API_BASE}/v1/api/quoc-gia/${subRoute}?page=${page}`, `Quốc gia: ${name}`, `#/quoc-gia/${subRoute}?`);
+                await viewCatalog(`${API_BASE}/v1/api/quoc-gia/${subRoute}?page=${page}`, `Quốc gia: ${subRoute}`, `#/quoc-gia/${subRoute}?`);
+
+            // Xử lý Năm: https://phimapi.com/v1/api/nam/{subRoute}?page=1
             } else if (route === 'nam') {
                 await viewCatalog(`${API_BASE}/v1/api/nam/${subRoute}?page=${page}`, `Phim năm ${subRoute}`, `#/nam/${subRoute}?`);
+
             } else if (route === 'tim-kiem') {
                 await viewSearch(queryParams.keyword || '', page);
             } else if (route === 'phim') {
