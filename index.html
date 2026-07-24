@@ -640,6 +640,9 @@
             closeMobileMenu(); // Tự động đóng menu trên di động mỗi khi chuyển trang
             if (currentHls) { currentHls.destroy(); currentHls = null; }
 
+            // TỰ ĐỘNG CUỘN LÊN ĐẦU TRANG KHI CHUYỂN ROUTE HOẶC CHUYỂN TRANG (PAGINATION)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             const { route, subRoute, queryParams } = parseHash();
             const page = queryParams.page || 1;
 
