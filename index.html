@@ -2,7 +2,7 @@
 <html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>PhimFlix • Xem Phim HD Online</title>
 
     <!-- Font chữ -->
@@ -11,8 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -30,8 +29,7 @@
                     },
                     animation: {
                         'shimmer': 'shimmer 2s infinite linear',
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.4s ease-out'
+                        'fade-in': 'fadeIn 0.5s ease-out'
                     },
                     keyframes: {
                         shimmer: {
@@ -41,10 +39,6 @@
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(16px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
                 }
@@ -56,17 +50,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <!-- Hls.js -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest">
-    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: #0f172a;
@@ -94,642 +86,620 @@
             animation: shimmer 1.5s infinite;
         }
 
-        /* ===== FIX LANDSCAPE MOBILE ===== */
-        /* Giảm chiều cao header, card, hero khi xoay ngang */
-        @media screen and (max-width: 1023px) and (orientation: landscape) {
-            header {
-                height: 3.2rem !important;
+        /* Cải thiện hiển thị trên màn hình ngang điện thoại */
+        @media (max-width: 820px) and (orientation: landscape) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             }
-            header .text-2xl {
-                font-size: 1.25rem !important;
+            .hero-swiper .swiper-slide {
+                aspect-ratio: 16/9 !important;
             }
-            header .h-16 {
-                height: 3.2rem !important;
+            header .max-w-7xl {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
             }
             #app-content {
-                padding-top: 0.5rem !important;
-                padding-bottom: 0.5rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
             }
-            /* Hero swiper giảm chiều cao */
-            .hero-swiper .swiper-slide {
-                aspect-ratio: 16 / 7 !important;
+            /* Ẩn bớt nội dung không cần thiết trên ngang */
+            .hidden-landscape\:block {
+                display: block !important;
             }
-            .hero-swiper .swiper-slide h1 {
-                font-size: 1.25rem !important;
-                margin-bottom: 0.25rem !important;
+            .hidden-landscape\:hidden {
+                display: none !important;
             }
-            .hero-swiper .swiper-slide p {
-                font-size: 0.7rem !important;
-                line-clamp: 1 !important;
-                -webkit-line-clamp: 1 !important;
-                margin-bottom: 0.5rem !important;
+        }
+
+        @media (max-width: 640px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
-            .hero-swiper .swiper-slide .p-6 {
-                padding: 1rem !important;
+            .gap-4 {
+                gap: 0.75rem;
             }
-            /* Grid card điều chỉnh */
-            .grid-cols-2.sm\:grid-cols-3.md\:grid-cols-4.lg\:grid-cols-5.xl\:grid-cols-6 {
-                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-                gap: 0.75rem !important;
+            .gap-6 {
+                gap: 1rem;
             }
-            /* Giảm kích thước card trong landscape */
-            .aspect-\[2\/3\] {
-                aspect-ratio: 3/4 !important;
+            .p-6 {
+                padding: 1rem;
             }
-            /* Player container landscape */
-            #media-container .aspect-video {
-                max-height: 55vh !important;
+            .text-2xl {
+                font-size: 1.25rem;
+                line-height: 1.75rem;
             }
-            /* Footer ẩn bớt */
-            footer {
-                padding: 0.5rem !important;
-                font-size: 0.65rem !important;
+            .text-xl {
+                font-size: 1.125rem;
+                line-height: 1.5rem;
             }
-            /* Back to top button nhỏ hơn */
-            #back-to-top {
-                bottom: 0.75rem !important;
-                right: 0.75rem !important;
-                padding: 0.5rem !important;
-            }
-            #back-to-top .w-5 {
-                width: 1rem !important;
-                height: 1rem !important;
-            }
-            /* Detail page grid */
-            .grid-cols-1.lg\:grid-cols-3 {
-                grid-template-columns: 1fr 1fr !important;
-            }
-            /* Lịch sử grid */
-            .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3 {
+        }
+
+        /* Landscape điện thoại: hiển thị 3 cột */
+        @media (min-width: 641px) and (max-width: 820px) and (orientation: landscape) {
+            .grid-cols-2 {
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             }
         }
 
-        @media screen and (max-width: 640px) and (orientation: landscape) {
-            .grid-cols-2.sm\:grid-cols-3.md\:grid-cols-4.lg\:grid-cols-5.xl\:grid-cols-6 {
-                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            }
-            .hero-swiper .swiper-slide {
-                aspect-ratio: 16 / 6 !important;
-            }
-            #mobile-menu {
-                max-height: 70vh !important;
-                overflow-y: auto !important;
+        /* Máy tính bảng nhỏ / điện thoại lớn */
+        @media (min-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
         }
-
-        /* Điện thoại dọc (portrait) giữ layout gốc nhưng tối ưu */
-        @media screen and (max-width: 640px) and (orientation: portrait) {
-            .hero-swiper .swiper-slide h1 {
-                font-size: 1.1rem !important;
-            }
-            .hero-swiper .swiper-slide p {
-                font-size: 0.7rem !important;
+        @media (min-width: 1024px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
-
-        /* Tablet ngang */
-        @media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-            .grid-cols-2.sm\:grid-cols-3.md\:grid-cols-4.lg\:grid-cols-5.xl\:grid-cols-6 {
-                grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        @media (min-width: 1280px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+        }
+        @media (min-width: 1536px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(6, minmax(0, 1fr));
             }
         }
 
-        /* Đảm bảo video không tràn */
-        #hls-player {
-            max-height: 75vh;
-            object-fit: contain;
-        }
-        @media (orientation: landscape) {
-            #hls-player {
-                max-height: 60vh;
-            }
+        /* Dropdown trên desktop không bị tràn */
+        .dropdown-menu {
+            max-height: 70vh;
+            overflow-y: auto;
         }
 
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
+        /* Cải thiện nút xem phim */
+        .btn-play {
+            transition: all 0.2s ease;
+        }
+        .btn-play:hover {
+            transform: scale(1.05);
         }
 
-        /* Glass effect tinh tế */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
+        /* Làm mịn card */
+        .movie-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .movie-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -12px rgba(229, 9, 20, 0.25);
+            border-color: rgba(229, 9, 20, 0.5);
+        }
+        .movie-card img {
+            transition: transform 0.6s ease;
+        }
+        .movie-card:hover img {
+            transform: scale(1.08);
         }
 
-        /* Hover card nâng cao */
-        .movie-card:hover .movie-card-overlay {
-            opacity: 1;
+        /* Ẩn thanh cuộn cho menu dropdown */
+        .dropdown-scroll::-webkit-scrollbar {
+            width: 3px;
         }
-        .movie-card-overlay {
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .dropdown-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand selection:text-white">
 
-    <!-- ===== HEADER ===== -->
-    <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-2xl border-b border-slate-800/60 shadow-lg shadow-black/10 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
+<!-- ===== HEADER ===== -->
+<header class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/70 shadow-lg shadow-black/5">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 h-14 md:h-16 flex items-center justify-between gap-2">
 
-            <!-- Logo -->
-            <a href="#/" class="flex items-center gap-1.5 sm:gap-2 text-xl sm:text-2xl font-black tracking-tight text-brand shrink-0">
-                <i data-lucide="clapperboard" class="w-5 h-5 sm:w-7 sm:h-7"></i>
-                <span class="hidden sm:inline">PHIM<span class="text-white">FLIX</span></span>
-                <span class="sm:hidden text-white text-lg font-black">PF</span>
-            </a>
+        <!-- Logo -->
+        <a href="#/" class="flex items-center gap-1.5 text-xl md:text-2xl font-black tracking-tight text-brand shrink-0">
+            <i data-lucide="clapperboard" class="w-6 h-6 md:w-7 md:h-7"></i>
+            <span>PHIM<span class="text-white">FLIX</span></span>
+        </a>
 
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center gap-4 text-sm font-medium text-slate-300">
-                <a href="#/" class="hover:text-brand transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand after:transition-all hover:after:w-full">Trang Chủ</a>
-                <a href="#/danh-sach/phim-bo" class="hover:text-brand transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand after:transition-all hover:after:w-full">Phim Bộ</a>
-                <a href="#/danh-sach/phim-le" class="hover:text-brand transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand after:transition-all hover:after:w-full">Phim Lẻ</a>
-                <a href="#/danh-sach/phim-chieu-rap" class="hover:text-brand transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand after:transition-all hover:after:w-full">Chiếu Rạp</a>
-                <a href="#/danh-sach/hoat-hinh" class="hover:text-brand transition-colors duration-200 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand after:transition-all hover:after:w-full">Hoạt Hình</a>
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-4 lg:gap-5 text-sm font-medium text-slate-300">
+            <a href="#/" class="hover:text-brand transition whitespace-nowrap">Trang Chủ</a>
+            <a href="#/danh-sach/phim-bo" class="hover:text-brand transition whitespace-nowrap">Phim Bộ</a>
+            <a href="#/danh-sach/phim-le" class="hover:text-brand transition whitespace-nowrap">Phim Lẻ</a>
+            <a href="#/danh-sach/phim-chieu-rap" class="hover:text-brand transition whitespace-nowrap hidden lg:inline">Phim Chiếu Rạp</a>
+            <a href="#/danh-sach/hoat-hinh" class="hover:text-brand transition whitespace-nowrap hidden lg:inline">Hoạt Hình</a>
 
-                <!-- Dropdown Thể Loại -->
-                <div class="relative group py-4">
-                    <button class="flex items-center gap-1 hover:text-brand transition-colors duration-200">Thể Loại <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i></button>
-                    <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 grid grid-cols-3 gap-0.5 w-80 p-2 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl shadow-black/40 max-h-72 overflow-y-auto z-50 origin-top-left scale-95 group-hover:scale-100" id="dropdown-theloai">
-                        <span class="col-span-3 text-xs text-slate-500 text-center py-3">Đang tải...</span>
-                    </div>
-                </div>
-
-                <!-- Dropdown Quốc Gia -->
-                <div class="relative group py-4">
-                    <button class="flex items-center gap-1 hover:text-brand transition-colors duration-200">Quốc Gia <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i></button>
-                    <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 grid grid-cols-2 gap-0.5 w-64 p-2 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl shadow-black/40 max-h-72 overflow-y-auto z-50 origin-top-left scale-95 group-hover:scale-100" id="dropdown-quocgia">
-                        <span class="col-span-2 text-xs text-slate-500 text-center py-3">Đang tải...</span>
-                    </div>
-                </div>
-
-                <!-- Dropdown Năm -->
-                <div class="relative group py-4">
-                    <button class="flex items-center gap-1 hover:text-brand transition-colors duration-200">Năm <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i></button>
-                    <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 grid grid-cols-3 gap-0.5 w-56 p-2 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl shadow-black/40 max-h-64 overflow-y-auto z-50 origin-top-left scale-95 group-hover:scale-100" id="dropdown-nam">
-                        <span class="col-span-3 text-xs text-slate-500 text-center py-3">Đang tải...</span>
-                    </div>
-                </div>
-
-                <!-- Lịch sử xem -->
-                <a href="#/lich-su" class="hover:text-brand transition-colors duration-200 flex items-center gap-1.5 text-amber-400 font-semibold bg-amber-400/10 px-3 py-1.5 rounded-full">
-                    <i data-lucide="history" class="w-3.5 h-3.5"></i> Lịch Sử
-                </a>
-            </nav>
-
-            <!-- Search + Mobile Toggle -->
-            <div class="flex items-center gap-2 flex-1 md:flex-none justify-end">
-                <form id="search-form" class="relative flex-1 max-w-[180px] sm:max-w-xs hidden sm:block">
-                    <input type="text" id="search-input" placeholder="Tìm phim..." class="w-full bg-slate-800/70 text-sm text-slate-200 pl-9 pr-3 py-2 rounded-full border border-slate-700/50 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all placeholder:text-slate-500">
-                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
-                </form>
-
-                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/50">
-                    <i data-lucide="menu" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+            <!-- Dropdown Thể Loại -->
+            <div class="relative group py-4">
+                <button class="flex items-center gap-1 hover:text-brand transition whitespace-nowrap">
+                    Thể Loại <i data-lucide="chevron-down" class="w-4 h-4"></i>
                 </button>
+                <div class="dropdown-menu absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 grid grid-cols-2 md:grid-cols-3 gap-1 w-64 md:w-80 p-3 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl max-h-72 overflow-y-auto dropdown-scroll" id="dropdown-theloai">
+                    <span class="col-span-3 text-xs text-slate-500 text-center py-2">Đang tải...</span>
+                </div>
             </div>
-        </div>
 
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="md:hidden hidden bg-slate-900/98 backdrop-blur-2xl border-t border-slate-800 px-4 py-3 space-y-2 max-h-[75vh] overflow-y-auto animate-fade-in shadow-2xl">
-            <a href="#/" class="block py-2.5 px-3 text-sm font-semibold hover:text-brand hover:bg-slate-800/50 rounded-xl transition-all">🏠 Trang Chủ</a>
-            <a href="#/lich-su" class="block py-2.5 px-3 text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-400/5 rounded-xl transition-all flex items-center gap-2">
-                <i data-lucide="history" class="w-4 h-4"></i> Lịch Sử Xem Phim
+            <!-- Dropdown Quốc Gia -->
+            <div class="relative group py-4">
+                <button class="flex items-center gap-1 hover:text-brand transition whitespace-nowrap">
+                    Quốc Gia <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </button>
+                <div class="dropdown-menu absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 grid grid-cols-2 gap-1 w-56 md:w-64 p-3 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl max-h-72 overflow-y-auto dropdown-scroll" id="dropdown-quocgia">
+                    <span class="col-span-2 text-xs text-slate-500 text-center py-2">Đang tải...</span>
+                </div>
+            </div>
+
+            <!-- Dropdown Năm -->
+            <div class="relative group py-4">
+                <button class="flex items-center gap-1 hover:text-brand transition whitespace-nowrap">
+                    Năm <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </button>
+                <div class="dropdown-menu absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 grid grid-cols-3 gap-1 w-52 md:w-60 p-3 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-xl shadow-2xl max-h-72 overflow-y-auto dropdown-scroll" id="dropdown-nam">
+                    <span class="col-span-3 text-xs text-slate-500 text-center py-2">Đang tải...</span>
+                </div>
+            </div>
+
+            <!-- Lịch sử xem -->
+            <a href="#/lich-su" class="hover:text-brand transition flex items-center gap-1.5 text-amber-400 font-semibold whitespace-nowrap">
+                <i data-lucide="history" class="w-4 h-4"></i> <span class="hidden xl:inline">Lịch Sử</span>
             </a>
-            <a href="#/danh-sach/phim-bo" class="block py-2.5 px-3 text-sm font-medium hover:text-brand hover:bg-slate-800/50 rounded-xl transition-all">📺 Phim Bộ</a>
-            <a href="#/danh-sach/phim-le" class="block py-2.5 px-3 text-sm font-medium hover:text-brand hover:bg-slate-800/50 rounded-xl transition-all">🎬 Phim Lẻ</a>
-            <a href="#/danh-sach/phim-chieu-rap" class="block py-2.5 px-3 text-sm font-medium hover:text-brand hover:bg-slate-800/50 rounded-xl transition-all">🎟️ Phim Chiếu Rạp</a>
-            <a href="#/danh-sach/hoat-hinh" class="block py-2.5 px-3 text-sm font-medium hover:text-brand hover:bg-slate-800/50 rounded-xl transition-all">🐼 Hoạt Hình</a>
+        </nav>
 
-            <div class="pt-2 border-t border-slate-800/60 text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Thể Loại</div>
-            <div id="mobile-theloai" class="grid grid-cols-3 gap-1"></div>
-
-            <div class="pt-2 border-t border-slate-800/60 text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Quốc Gia</div>
-            <div id="mobile-quocgia" class="grid grid-cols-3 gap-1"></div>
-
-            <div class="pt-2 border-t border-slate-800/60 text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Năm Phát Hành</div>
-            <div id="mobile-nam" class="grid grid-cols-4 gap-1"></div>
-
-            <form id="search-form-mobile" class="pt-2">
-                <input type="text" id="search-input-mobile" placeholder="🔍 Tìm phim..." class="w-full bg-slate-800/80 text-sm text-slate-200 px-4 py-2.5 rounded-xl border border-slate-700/50 focus:outline-none focus:border-brand transition placeholder:text-slate-500">
+        <!-- Search + Mobile Toggle -->
+        <div class="flex items-center gap-2 flex-1 md:flex-none justify-end">
+            <form id="search-form" class="relative flex-1 max-w-[140px] sm:max-w-xs hidden sm:block">
+                <input type="text" id="search-input" placeholder="Tìm phim..."
+                       class="w-full bg-slate-900/80 text-sm text-slate-200 pl-8 pr-3 py-1.5 md:py-2 rounded-full border border-slate-700/60 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition placeholder:text-slate-500">
+                <i data-lucide="search" class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
             </form>
+
+            <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white transition p-1">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
         </div>
-    </header>
+    </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main id="app-content" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade-in">
-    </main>
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu" class="md:hidden hidden bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto animate-fade-in">
+        <a href="#/" class="block py-2 text-sm font-medium hover:text-brand">Trang Chủ</a>
+        <a href="#/lich-su" class="block py-2 text-sm font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-2">
+            <i data-lucide="history" class="w-4 h-4"></i> Lịch Sử Xem Phim
+        </a>
+        <a href="#/danh-sach/phim-bo" class="block py-2 text-sm font-medium hover:text-brand">Phim Bộ</a>
+        <a href="#/danh-sach/phim-le" class="block py-2 text-sm font-medium hover:text-brand">Phim Lẻ</a>
+        <a href="#/danh-sach/phim-chieu-rap" class="block py-2 text-sm font-medium hover:text-brand">Phim Chiếu Rạp</a>
+        <a href="#/danh-sach/hoat-hinh" class="block py-2 text-sm font-medium hover:text-brand">Hoạt Hình</a>
+        
+        <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Thể Loại</div>
+        <div id="mobile-theloai" class="grid grid-cols-2 gap-1"></div>
+        
+        <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Quốc Gia</div>
+        <div id="mobile-quocgia" class="grid grid-cols-2 gap-1"></div>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="border-t border-slate-800/50 bg-slate-950/90 backdrop-blur-sm py-4 sm:py-6 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p class="flex items-center gap-1">© 2026 <span class="text-brand font-bold">PhimFlix</span> · Xem phim trực tuyến miễn phí</p>
-            <p class="flex items-center gap-1">Hosted on <span class="text-slate-400">GitHub Pages</span> <i data-lucide="github" class="w-3.5 h-3.5"></i></p>
-        </div>
-    </footer>
+        <div class="pt-2 border-t border-slate-800 text-xs font-medium text-slate-400 uppercase tracking-wider">Năm Phát Hành</div>
+        <div id="mobile-nam" class="grid grid-cols-3 gap-1"></div>
 
-    <button id="back-to-top" class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40 p-2.5 sm:p-3 bg-brand hover:bg-brand-dark text-white rounded-full shadow-lg shadow-brand/30 transition-all duration-300 opacity-0 invisible translate-y-4 hover:scale-110 active:scale-95" title="Lên đầu trang">
-        <i data-lucide="arrow-up" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-    </button>
+        <form id="search-form-mobile" class="pt-2">
+            <input type="text" id="search-input-mobile" placeholder="Tìm phim..."
+                   class="w-full bg-slate-800 text-sm text-slate-200 px-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-brand">
+        </form>
+    </div>
+</header>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js">
-    </script>
-    <script>
-        (function() {
-            const API_BASE = 'https://phimapi.com';
-            const IMG_DOMAIN = 'https://phimimg.com';
-            const HISTORY_KEY = 'phimflix_history_v1';
+<!-- ===== MAIN CONTENT ===== -->
+<main id="app-content" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-8 py-4 md:py-6 animate-fade-in">
+</main>
 
-            let currentHls = null;
-            let categoriesCache = [];
-            let countriesCache = [];
-            let yearsCache = [];
-            let homeSwiper = null;
-            let cachedMovieData = null;
+<!-- ===== FOOTER ===== -->
+<footer class="border-t border-slate-900 bg-slate-950 py-6 md:py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p>© 2026 PhimFlix · Xem phim trực tuyến miễn phí</p>
+        <p class="flex items-center gap-1">Hosted on <span class="text-slate-400">GitHub Pages</span> <i data-lucide="github" class="w-3.5 h-3.5"></i></p>
+    </div>
+</footer>
 
-            // Đăng ký Service Worker
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./service-worker.js')
-                        .then(reg => console.log('Service Worker đã sẵn sàng:', reg.scope))
-                        .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
-                });
+<button id="back-to-top" class="fixed bottom-6 right-6 z-40 p-3 bg-brand hover:bg-brand-dark text-white rounded-full shadow-lg shadow-brand/30 transition opacity-0 invisible translate-y-2 duration-300" title="Lên đầu trang">
+    <i data-lucide="arrow-up" class="w-5 h-5"></i>
+</button>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    (function() {
+        const API_BASE = 'https://phimapi.com';
+        const IMG_DOMAIN = 'https://phimimg.com';
+        const HISTORY_KEY = 'phimflix_history_v1';
+
+        let currentHls = null;
+        let categoriesCache = [];
+        let countriesCache = [];
+        let yearsCache = [];
+        let homeSwiper = null;
+        let cachedMovieData = null;
+
+        // Đăng ký Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('Service Worker đã sẵn sàng:', reg.scope))
+                    .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
+            });
+        }
+
+        // --- HÀM XỬ LÝ LỊCH SỬ XEM PHIM ---
+        function getWatchHistory() {
+            try {
+                return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
+            } catch (e) {
+                return {};
             }
+        }
 
-            // --- HÀM XỬ LÝ LỊCH SỬ XEM PHIM ---
-            function getWatchHistory() {
-                try {
-                    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
-                } catch (e) {
-                    return {};
-                }
-            }
-
-            function saveWatchProgress(movieInfo) {
-                if (!movieInfo || !movieInfo.slug) return;
-                const history = getWatchHistory();
-                history[movieInfo.slug] = {
-                    slug: movieInfo.slug,
-                    name: movieInfo.name,
-                    origin_name: movieInfo.origin_name || '',
-                    poster_url: movieInfo.poster_url || '',
-                    thumb_url: movieInfo.thumb_url || '',
-                    ep_slug: movieInfo.ep_slug,
-                    ep_name: movieInfo.ep_name,
-                    server_idx: movieInfo.server_idx,
-                    server_name: movieInfo.server_name,
-                    currentTime: movieInfo.currentTime || 0,
-                    duration: movieInfo.duration || 0,
-                    updatedAt: Date.now()
-                };
-                try {
-                    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-                } catch (e) { console.error('Lỗi lưu lịch sử:', e); }
-            }
-
-            function removeHistoryItem(slug) {
-                const history = getWatchHistory();
-                delete history[slug];
+        function saveWatchProgress(movieInfo) {
+            if (!movieInfo || !movieInfo.slug) return;
+            const history = getWatchHistory();
+            history[movieInfo.slug] = {
+                slug: movieInfo.slug,
+                name: movieInfo.name,
+                origin_name: movieInfo.origin_name || '',
+                poster_url: movieInfo.poster_url || '',
+                thumb_url: movieInfo.thumb_url || '',
+                ep_slug: movieInfo.ep_slug,
+                ep_name: movieInfo.ep_name,
+                server_idx: movieInfo.server_idx,
+                server_name: movieInfo.server_name,
+                currentTime: movieInfo.currentTime || 0,
+                duration: movieInfo.duration || 0,
+                updatedAt: Date.now()
+            };
+            try {
                 localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-            }
+            } catch (e) { console.error('Lỗi lưu lịch sử:', e); }
+        }
 
-            function clearAllHistory() {
-                localStorage.removeItem(HISTORY_KEY);
-            }
+        function removeHistoryItem(slug) {
+            const history = getWatchHistory();
+            delete history[slug];
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        }
 
-            function formatTime(seconds) {
-                if (!seconds || isNaN(seconds) || seconds < 0) return '00:00';
-                const m = Math.floor(seconds / 60);
-                const s = Math.floor(seconds % 60);
-                return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-            }
+        function clearAllHistory() {
+            localStorage.removeItem(HISTORY_KEY);
+        }
 
-            // --- Helpers ---
-            const getImageUrl = (path) => {
-                if (!path) return 'https://via.placeholder.com/300x450?text=No+Cover';
-                if (path.startsWith('http')) return path;
-                return `${IMG_DOMAIN}/${path.replace(/^\//, '')}`;
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds) || seconds < 0) return '00:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // --- Helpers ---
+        const getImageUrl = (path) => {
+            if (!path) return 'https://via.placeholder.com/300x450?text=No+Cover';
+            if (path.startsWith('http')) return path;
+            return `${IMG_DOMAIN}/${path.replace(/^\//, '')}`;
+        };
+
+        const parseHash = () => {
+            const hash = window.location.hash.slice(1) || '/';
+            const [pathAndQuery, queryString] = hash.split('?');
+            const parts = pathAndQuery.split('/').filter(Boolean);
+            const params = new URLSearchParams(queryString || '');
+            return {
+                route: parts[0] || 'home',
+                subRoute: parts[1] || '',
+                param: parts[2] || '',
+                queryParams: Object.fromEntries(params.entries())
             };
+        };
 
-            const parseHash = () => {
-                const hash = window.location.hash.slice(1) || '/';
-                const [pathAndQuery, queryString] = hash.split('?');
-                const parts = pathAndQuery.split('/').filter(Boolean);
-                const params = new URLSearchParams(queryString || '');
-                return {
-                    route: parts[0] || 'home',
-                    subRoute: parts[1] || '',
-                    param: parts[2] || '',
-                    queryParams: Object.fromEntries(params.entries())
-                };
-            };
+        const extractArray = (res) => {
+            if (!res) return [];
+            if (Array.isArray(res)) return res;
+            if (Array.isArray(res.data)) return res.data;
+            if (Array.isArray(res.data?.items)) return res.data.items;
+            if (Array.isArray(res.items)) return res.items;
+            return [];
+        };
 
-            const extractArray = (res) => {
-                if (!res) return [];
-                if (Array.isArray(res)) return res;
-                if (Array.isArray(res.data)) return res.data;
-                if (Array.isArray(res.data?.items)) return res.data.items;
-                if (Array.isArray(res.items)) return res.items;
-                return [];
-            };
-
-            function closeMobileMenu() {
-                const mobileMenu = document.getElementById('mobile-menu');
-                const menuBtnIcon = document.getElementById('mobile-menu-btn')?.querySelector('i');
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('hidden');
-                    if (menuBtnIcon) {
-                        menuBtnIcon.setAttribute('data-lucide', 'menu');
-                        lucide.createIcons();
-                    }
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuBtnIcon = document.getElementById('mobile-menu-btn')?.querySelector('i');
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                if (menuBtnIcon) {
+                    menuBtnIcon.setAttribute('data-lucide', 'menu');
+                    lucide.createIcons();
                 }
             }
+        }
 
-            function showSkeleton() {
-                document.getElementById('app-content').innerHTML = `
-                <div class="space-y-6 sm:space-y-8 animate-pulse">
-                    <div class="skeleton h-40 sm:h-64 md:h-80 lg:h-96 rounded-2xl sm:rounded-3xl"></div>
-                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4 md:gap-5">
-                        ${Array(12).fill('<div class="aspect-[3/4] sm:aspect-[2/3] skeleton rounded-xl sm:rounded-2xl"></div>').join('')}
+        function showSkeleton() {
+            document.getElementById('app-content').innerHTML = `
+                <div class="space-y-8 animate-pulse">
+                    <div class="skeleton h-56 md:h-80 lg:h-96 rounded-2xl"></div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-5">
+                        ${Array(12).fill('<div class="aspect-[2/3] skeleton rounded-xl"></div>').join('')}
                     </div>
                 </div>
             `;
+        }
+
+        function renderPagination(pagination, hashPrefix) {
+            if (!pagination || pagination.totalPages <= 1) return '';
+            const current = pagination.currentPage;
+            const total = pagination.totalPages;
+            let html = '<div class="flex items-center justify-center gap-2 sm:gap-3 mt-8 md:mt-10 flex-wrap">';
+            if (current > 1) {
+                html += `<a href="${hashPrefix}page=${current-1}" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1"><i data-lucide="chevron-left" class="w-4 h-4"></i> <span class="hidden sm:inline">Trước</span></a>`;
             }
-
-            function renderPagination(pagination, hashPrefix) {
-                if (!pagination || pagination.totalPages <= 1) return '';
-                const current = pagination.currentPage;
-                const total = pagination.totalPages;
-                let html =
-                    '<div class="flex items-center justify-center gap-2 sm:gap-3 mt-8 sm:mt-10 flex-wrap">';
-                if (current > 1) {
-                    html +=
-                        `<a href="${hashPrefix}page=${current-1}" class="px-3 sm:px-4 py-2 bg-slate-800/80 hover:bg-slate-700 text-xs sm:text-sm font-semibold rounded-xl border border-slate-700/50 transition flex items-center gap-1"><i data-lucide="chevron-left" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Trước</a>`;
-                }
-                html +=
-                    `<span class="px-3 sm:px-4 py-2 bg-slate-900/80 border border-slate-800/60 text-xs sm:text-sm rounded-xl text-slate-400 backdrop-blur-sm">Trang <strong class="text-white">${current}</strong> / ${total}</span>`;
-                if (current < total) {
-                    html +=
-                        `<a href="${hashPrefix}page=${current+1}" class="px-3 sm:px-4 py-2 bg-brand hover:bg-brand-dark text-xs sm:text-sm font-semibold rounded-xl transition flex items-center gap-1 shadow-lg shadow-brand/20">Sau <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></a>`;
-                }
-                html += '</div>';
-                return html;
+            html += `<span class="px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-900 border border-slate-800 text-xs sm:text-sm rounded-lg text-slate-400">Trang <strong class="text-white">${current}</strong> / ${total}</span>`;
+            if (current < total) {
+                html += `<a href="${hashPrefix}page=${current+1}" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-brand hover:bg-brand-dark text-xs sm:text-sm font-semibold rounded-lg transition flex items-center gap-1"><span class="hidden sm:inline">Sau</span> <i data-lucide="chevron-right" class="w-4 h-4"></i></a>`;
             }
+            html += '</div>';
+            return html;
+        }
 
-            function renderMovieCard(movie) {
-                const title = movie.name || '';
-                const origin = movie.origin_name || '';
-                const year = movie.year || '';
-                const quality = movie.quality || movie.episode_current || 'HD';
-                const poster = getImageUrl(movie.poster_url || movie.thumb_url);
-                const slug = movie.slug;
+        function renderMovieCard(movie) {
+            const title = movie.name || '';
+            const origin = movie.origin_name || '';
+            const year = movie.year || '';
+            const quality = movie.quality || movie.episode_current || 'HD';
+            const poster = getImageUrl(movie.poster_url || movie.thumb_url);
+            const slug = movie.slug;
 
-                return `
-            <a href="#/phim/${slug}" class="movie-card group relative flex flex-col bg-slate-900/70 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-800/50 hover:border-brand/40 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand/10">
-                <div class="aspect-[3/4] sm:aspect-[2/3] w-full overflow-hidden bg-slate-800 relative">
+            return `
+            <a href="#/phim/${slug}" class="movie-card group relative flex flex-col bg-slate-900/80 backdrop-blur-sm rounded-xl md:rounded-2xl overflow-hidden border border-slate-800/60 hover:border-brand/40 transition-all duration-300 hover:-translate-y-1.5 md:hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand/10">
+                <div class="aspect-[2/3] w-full overflow-hidden bg-slate-800 relative">
                     <img src="${poster}" alt="${title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
-                    <div class="movie-card-overlay absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/20 to-transparent flex items-end justify-center pb-3 sm:pb-4">
-                        <span class="bg-brand/90 text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-1 shadow-lg"><i data-lucide="play" class="w-3 h-3 fill-white"></i> Xem ngay</span>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="bg-brand/90 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-1"><i data-lucide="play" class="w-3 h-3 fill-white"></i> Xem ngay</span>
                     </div>
-                    <span class="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-brand text-[9px] sm:text-[10px] font-bold text-white rounded-md shadow-md z-10">${quality}</span>
+                    <span class="absolute top-2 left-2 px-2 py-0.5 bg-brand text-[9px] sm:text-[10px] font-bold text-white rounded-md shadow-md z-10">${quality}</span>
                 </div>
-                <div class="p-2.5 sm:p-3 flex flex-col flex-1">
+                <div class="p-2.5 md:p-3 flex flex-col flex-1">
                     <h3 class="font-bold text-xs sm:text-sm text-slate-100 line-clamp-1 group-hover:text-brand transition-colors">${title}</h3>
                     <p class="text-[10px] sm:text-xs text-slate-400 line-clamp-1 mt-0.5">${origin}</p>
                     ${year ? `<span class="text-[10px] sm:text-[11px] text-slate-500 mt-auto pt-1.5 font-medium">📅 ${year}</span>` : ''}
                 </div>
             </a>`;
-            }
+        }
 
-            // ========== NẠP MENUS DROPDOWN ==========
-            async function loadHeaderMenus() {
-                try {
-                    const [catRes, counRes, yearRes] = await Promise.all([
-                        fetch(`${API_BASE}/the-loai`).then(r => r.json()).catch(() => []),
-                        fetch(`${API_BASE}/quoc-gia`).then(r => r.json()).catch(() => []),
-                        fetch(`${API_BASE}/nam-phat-hanh`).then(r => r.json()).catch(() => [])
-                    ]);
+        // ========== NẠP MENUS DROPDOWN ==========
+        async function loadHeaderMenus() {
+            try {
+                const [catRes, counRes, yearRes] = await Promise.all([
+                    fetch(`${API_BASE}/the-loai`).then(r => r.json()).catch(() => []),
+                    fetch(`${API_BASE}/quoc-gia`).then(r => r.json()).catch(() => []),
+                    fetch(`${API_BASE}/nam-phat-hanh`).then(r => r.json()).catch(() => [])
+                ]);
 
-                    categoriesCache = extractArray(catRes);
-                    countriesCache = extractArray(counRes);
-                    yearsCache = extractArray(yearRes);
+                categoriesCache = extractArray(catRes);
+                countriesCache = extractArray(counRes);
+                yearsCache = extractArray(yearRes);
 
-                    // 1. Thể Loại
-                    if (categoriesCache.length > 0) {
-                        const html = categoriesCache.map(c => {
-                            const name = typeof c === 'object' ? (c.name || c.title || '') : c;
-                            const slug = typeof c === 'object' ? (c.slug || c.name || '') : c;
-                            if (!name) return '';
-                            return `<a href="#/the-loai/${slug}" class="px-2.5 py-2 hover:bg-slate-800/80 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors font-medium">${name}</a>`;
-                        }).filter(Boolean).join('');
-                        document.getElementById('dropdown-theloai').innerHTML = html;
-                        document.getElementById('mobile-theloai').innerHTML = html;
-                    }
-
-                    // 2. Quốc Gia
-                    if (countriesCache.length > 0) {
-                        const html = countriesCache.map(c => {
-                            const name = typeof c === 'object' ? (c.name || c.title || '') : c;
-                            const slug = typeof c === 'object' ? (c.slug || c.name || '') : c;
-                            if (!name) return '';
-                            return `<a href="#/quoc-gia/${slug}" class="px-2.5 py-2 hover:bg-slate-800/80 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors font-medium">${name}</a>`;
-                        }).filter(Boolean).join('');
-                        document.getElementById('dropdown-quocgia').innerHTML = html;
-                        document.getElementById('mobile-quocgia').innerHTML = html;
-                    }
-
-                    // 3. Năm Phát Hành
-                    if (yearsCache.length > 0) {
-                        const html = yearsCache.map(y => {
-                            let name = typeof y === 'object' ? (y.name || y.year || y.slug || '') : y;
-                            let slug = typeof y === 'object' ? (y.slug || y.name || y.year || '') : y;
-                            if (!name || name === 'undefined') return '';
-                            return `<a href="#/nam/${slug}" class="px-2.5 py-2 hover:bg-slate-800/80 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors font-medium text-center">${name}</a>`;
-                        }).filter(Boolean).join('');
-                        document.getElementById('dropdown-nam').innerHTML = html;
-                        document.getElementById('mobile-nam').innerHTML = html;
-                    }
-                } catch (e) {
-                    console.error('Lỗi nạp menu:', e);
+                // 1. Thể Loại
+                if (categoriesCache.length > 0) {
+                    const html = categoriesCache.map(c => {
+                        const name = typeof c === 'object' ? (c.name || c.title || '') : c;
+                        const slug = typeof c === 'object' ? (c.slug || c.name || '') : c;
+                        if (!name) return '';
+                        return `<a href="#/the-loai/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors">${name}</a>`;
+                    }).filter(Boolean).join('');
+                    document.getElementById('dropdown-theloai').innerHTML = html;
+                    document.getElementById('mobile-theloai').innerHTML = html;
                 }
+
+                // 2. Quốc Gia
+                if (countriesCache.length > 0) {
+                    const html = countriesCache.map(c => {
+                        const name = typeof c === 'object' ? (c.name || c.title || '') : c;
+                        const slug = typeof c === 'object' ? (c.slug || c.name || '') : c;
+                        if (!name) return '';
+                        return `<a href="#/quoc-gia/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors">${name}</a>`;
+                    }).filter(Boolean).join('');
+                    document.getElementById('dropdown-quocgia').innerHTML = html;
+                    document.getElementById('mobile-quocgia').innerHTML = html;
+                }
+
+                // 3. Năm Phát Hành
+                if (yearsCache.length > 0) {
+                    const html = yearsCache.map(y => {
+                        let name = typeof y === 'object' ? (y.name || y.year || y.slug || '') : y;
+                        let slug = typeof y === 'object' ? (y.slug || y.name || y.year || '') : y;
+                        if (!name || name === 'undefined') return '';
+                        return `<a href="#/nam/${slug}" class="px-2 py-1.5 hover:bg-slate-800 rounded-lg text-xs text-slate-300 hover:text-brand transition-colors text-center">${name}</a>`;
+                    }).filter(Boolean).join('');
+                    document.getElementById('dropdown-nam').innerHTML = html;
+                    document.getElementById('mobile-nam').innerHTML = html;
+                }
+            } catch (e) {
+                console.error('Lỗi nạp menu:', e);
             }
+        }
 
-            // ========== VIEWS ==========
-            async function viewHome() {
-                showSkeleton();
-                try {
-                    const res = await fetch(`${API_BASE}/v1/api/home`).then(r => r.json());
-                    const items = res?.data?.items || [];
-                    if (!items.length) {
-                        document.getElementById('app-content').innerHTML =
-                            '<p class="text-center py-20 text-slate-400">Không có dữ liệu phim.</p>';
-                        return;
-                    }
+        // ========== VIEWS ==========
+        async function viewHome() {
+            showSkeleton();
+            try {
+                const res = await fetch(`${API_BASE}/v1/api/home`).then(r => r.json());
+                const items = res?.data?.items || [];
+                if (!items.length) {
+                    document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-slate-400">Không có dữ liệu phim.</p>';
+                    return;
+                }
 
-                    const heroMovies = items.slice(0, 5);
-                    const heroSlides = heroMovies.map((m) => `
-                    <div class="swiper-slide relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] border border-slate-800/60 shadow-2xl">
+                const heroMovies = items.slice(0, 5);
+                const heroSlides = heroMovies.map((m) => `
+                    <div class="swiper-slide relative rounded-2xl md:rounded-3xl overflow-hidden aspect-[16/9] md:aspect-[21/9] border border-slate-800 shadow-2xl">
                         <img src="${getImageUrl(m.thumb_url || m.poster_url)}" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent flex flex-col justify-end p-4 sm:p-6 md:p-10">
-                            <span class="text-brand font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-1 sm:mb-2 drop-shadow">🔥 Nổi bật</span>
-                            <h1 class="text-lg sm:text-2xl md:text-4xl font-extrabold text-white mb-1 sm:mb-2 line-clamp-1 drop-shadow-lg">${m.name}</h1>
-                            <p class="text-xs sm:text-sm text-slate-200 line-clamp-2 max-w-xl mb-3 sm:mb-4 drop-shadow">${m.origin_name || ''}</p>
-                            <a href="#/phim/${m.slug}" class="inline-flex items-center gap-1.5 sm:gap-2 bg-brand hover:bg-brand-dark px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition shadow-xl shadow-brand/20 w-fit">
-                                <i data-lucide="play" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white"></i> Xem ngay
+                            <span class="text-brand font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-1.5 drop-shadow">🔥 Nổi bật</span>
+                            <h1 class="text-xl sm:text-2xl md:text-4xl font-extrabold text-white mb-1 line-clamp-1 drop-shadow-lg">${m.name}</h1>
+                            <p class="text-xs sm:text-sm text-slate-200 line-clamp-2 max-w-xl mb-3 drop-shadow">${m.origin_name || ''}</p>
+                            <a href="#/phim/${m.slug}" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition shadow-xl shadow-brand/20 w-fit">
+                                <i data-lucide="play" class="w-4 h-4 fill-white"></i> Xem ngay
                             </a>
                         </div>
                     </div>
                 `).join('');
 
-                    const html = `
-                <div class="space-y-8 sm:space-y-10">
-                    <div class="swiper hero-swiper rounded-2xl sm:rounded-3xl overflow-hidden">
+                const html = `
+                <div class="space-y-6 md:space-y-10">
+                    <div class="swiper hero-swiper rounded-2xl md:rounded-3xl overflow-hidden">
                         <div class="swiper-wrapper">${heroSlides}</div>
-                        <div class="swiper-pagination !bottom-3 sm:!bottom-4"></div>
+                        <div class="swiper-pagination !bottom-2 md:!bottom-4"></div>
                     </div>
 
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="flex items-center justify-between mb-4 md:mb-6">
                             <h2 class="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
-                                <i data-lucide="sparkles" class="w-5 h-5 sm:w-6 sm:h-6 text-brand"></i> Phim Mới Cập Nhật
+                                <i data-lucide="sparkles" class="w-5 h-5 md:w-6 md:h-6 text-brand"></i> Phim Mới Cập Nhật
                             </h2>
-                            <a href="#/danh-sach/phim-le" class="text-xs sm:text-sm text-brand hover:underline font-medium flex items-center gap-1 transition">Xem tất cả <i data-lucide="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i></a>
+                            <a href="#/danh-sach/phim-le" class="text-xs sm:text-sm text-brand hover:underline font-medium flex items-center gap-1">Xem tất cả <i data-lucide="arrow-right" class="w-3 h-3 sm:w-4 sm:h-4"></i></a>
                         </div>
-                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4 md:gap-5">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                             ${items.map(renderMovieCard).join('')}
                         </div>
                     </div>
                 </div>`;
 
-                    document.getElementById('app-content').innerHTML = html;
-                    lucide.createIcons();
+                document.getElementById('app-content').innerHTML = html;
+                lucide.createIcons();
 
-                    if (homeSwiper) homeSwiper.destroy();
-                    homeSwiper = new Swiper('.hero-swiper', {
-                        loop: true,
-                        autoplay: { delay: 5000, disableOnInteraction: false },
-                        pagination: { el: '.swiper-pagination', clickable: true },
-                        effect: 'fade',
-                        fadeEffect: { crossFade: true },
-                        speed: 800
-                    });
+                if (homeSwiper) homeSwiper.destroy();
+                homeSwiper = new Swiper('.hero-swiper', {
+                    loop: true,
+                    autoplay: { delay: 5000, disableOnInteraction: false },
+                    pagination: { el: '.swiper-pagination', clickable: true },
+                    effect: 'fade',
+                    fadeEffect: { crossFade: true },
+                    speed: 800
+                });
 
-                } catch (err) {
-                    document.getElementById('app-content').innerHTML =
-                        '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải trang chủ.</p>';
-                }
+            } catch (err) {
+                document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải trang chủ.</p>';
             }
+        }
 
-            async function viewCatalog(endpointUrl, fallbackTitle, hashPrefix) {
-                showSkeleton();
-                try {
-                    const res = await fetch(endpointUrl).then(r => r.json());
-                    const data = res?.data || res;
-                    const items = data.items || [];
-                    const pagination = data.params?.pagination || data.pagination;
-                    const title = data.titlePage || res?.titlePage || fallbackTitle;
+        async function viewCatalog(endpointUrl, fallbackTitle, hashPrefix) {
+            showSkeleton();
+            try {
+                const res = await fetch(endpointUrl).then(r => r.json());
+                const data = res?.data || res;
+                const items = data.items || [];
+                const pagination = data.params?.pagination || data.pagination;
+                const title = data.titlePage || res?.titlePage || fallbackTitle;
 
-                    const html = `
-                <div class="space-y-5 sm:space-y-6 animate-fade-in">
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <a href="#/" class="text-slate-400 hover:text-brand transition"><i data-lucide="home" class="w-4 h-4 sm:w-5 sm:h-5"></i></a>
-                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600"></i>
+                const html = `
+                <div class="space-y-4 md:space-y-6 animate-fade-in">
+                    <div class="flex items-center gap-2 text-sm text-slate-400">
+                        <a href="#/" class="hover:text-brand transition"><i data-lucide="home" class="w-4 h-4"></i></a>
+                        <i data-lucide="chevron-right" class="w-3 h-3 text-slate-600"></i>
                         <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-white">${title}</h1>
                     </div>
                     ${items.length === 0 ? '<p class="text-slate-400 py-20 text-center">Không tìm thấy phim nào.</p>' : `
-                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4 md:gap-5">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                             ${items.map(renderMovieCard).join('')}
                         </div>
                         ${renderPagination(pagination, hashPrefix)}
                     `}
                 </div>`;
-                    document.getElementById('app-content').innerHTML = html;
-                    lucide.createIcons();
-                } catch (err) {
-                    document.getElementById('app-content').innerHTML =
-                        '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải danh sách phim.</p>';
-                }
+                document.getElementById('app-content').innerHTML = html;
+                lucide.createIcons();
+            } catch (err) {
+                document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải danh sách phim.</p>';
             }
+        }
 
-            async function viewSearch(keyword, page = 1) {
-                showSkeleton();
-                try {
-                    const res = await fetch(
-                        `${API_BASE}/v1/api/tim-kiem?keyword=${encodeURIComponent(keyword)}&page=${page}`).then(r =>
-                        r.json());
-                    const data = res?.data || {};
-                    const items = data.items || [];
-                    const pagination = data.params?.pagination;
+        async function viewSearch(keyword, page = 1) {
+            showSkeleton();
+            try {
+                const res = await fetch(`${API_BASE}/v1/api/tim-kiem?keyword=${encodeURIComponent(keyword)}&page=${page}`).then(r => r.json());
+                const data = res?.data || {};
+                const items = data.items || [];
+                const pagination = data.params?.pagination;
 
-                    const html = `
-                <div class="space-y-5 sm:space-y-6 animate-fade-in">
-                    <h1 class="text-base sm:text-lg font-medium text-slate-300">
+                const html = `
+                <div class="space-y-4 md:space-y-6 animate-fade-in">
+                    <h1 class="text-lg sm:text-xl font-medium text-slate-300">
                         🔍 Kết quả cho: <strong class="text-brand">"${keyword}"</strong>
                     </h1>
                     ${items.length === 0 ? '<p class="text-slate-400 py-20 text-center">Không tìm thấy phim phù hợp.</p>' : `
-                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4 md:gap-5">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                             ${items.map(renderMovieCard).join('')}
                         </div>
                         ${renderPagination(pagination, `#/tim-kiem?keyword=${encodeURIComponent(keyword)}&`)}
                     `}
                 </div>`;
-                    document.getElementById('app-content').innerHTML = html;
-                    lucide.createIcons();
-                } catch (err) {
-                    document.getElementById('app-content').innerHTML =
-                        '<p class="text-center py-20 text-red-400">⚠️ Lỗi tìm kiếm.</p>';
-                }
+                document.getElementById('app-content').innerHTML = html;
+                lucide.createIcons();
+            } catch (err) {
+                document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">⚠️ Lỗi tìm kiếm.</p>';
             }
+        }
 
-            // TRANG LỊCH SỬ XEM PHIM (URL: #/lich-su)
-            async function viewHistory() {
-                const historyMap = getWatchHistory();
-                const items = Object.values(historyMap).sort((a, b) => b.updatedAt - a.updatedAt);
+        // TRANG LỊCH SỬ XEM PHIM (URL: #/lich-su)
+        async function viewHistory() {
+            const historyMap = getWatchHistory();
+            const items = Object.values(historyMap).sort((a, b) => b.updatedAt - a.updatedAt);
 
-                let html = `
-            <div class="space-y-5 sm:space-y-6 animate-fade-in">
-                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/60 pb-4">
+            let html = `
+            <div class="space-y-4 md:space-y-6 animate-fade-in">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3 md:pb-4">
                     <div>
                         <h1 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                            <i data-lucide="history" class="w-6 h-6 sm:w-7 sm:h-7 text-amber-400"></i> Lịch Sử Xem Phim
+                            <i data-lucide="history" class="w-6 h-6 md:w-7 md:h-7 text-amber-400"></i> Lịch Sử Xem Phim
                         </h1>
-                        <p class="text-xs text-slate-400 mt-1">Đã lưu ${items.length} phim bạn đang xem dở</p>
+                        <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Đã lưu ${items.length} phim bạn đang xem dở</p>
                     </div>
                     ${items.length > 0 ? `
-                        <button id="btn-clear-all-history" class="px-3 sm:px-4 py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-red-500/30">
-                            <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> Xóa tất cả
+                        <button id="btn-clear-all-history" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 border border-red-500/30">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i> <span class="hidden sm:inline">Xóa tất cả</span>
                         </button>
                     ` : ''}
                 </div>`;
 
-                if (items.length === 0) {
-                    html += `
-                <div class="text-center py-20 space-y-4">
-                    <div class="inline-flex p-4 bg-slate-900/80 text-slate-500 rounded-full">
-                        <i data-lucide="film" class="w-10 h-10 sm:w-12 sm:h-12"></i>
+            if (items.length === 0) {
+                html += `
+                <div class="text-center py-16 md:py-20 space-y-4">
+                    <div class="inline-flex p-4 bg-slate-900 text-slate-500 rounded-full">
+                        <i data-lucide="film" class="w-10 h-10 md:w-12 md:h-12"></i>
                     </div>
                     <p class="text-slate-400 text-sm">Bạn chưa có lịch sử xem phim nào.</p>
-                    <a href="#/" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand hover:bg-brand-dark text-white rounded-xl text-sm font-bold transition shadow-lg shadow-brand/20">
+                    <a href="#/" class="inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-brand hover:bg-brand-dark text-white rounded-xl text-xs sm:text-sm font-bold transition">
                         <i data-lucide="sparkles" class="w-4 h-4"></i> Khám phá phim ngay
                     </a>
                 </div>`;
-                } else {
-                    html += `
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            } else {
+                html += `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     ${items.map(item => {
                         const percent = item.duration > 0 ? Math.min(100, Math.round((item.currentTime / item.duration) * 100)) : 0;
                         const targetUrl = `#/phim/${item.slug}?ep=${item.ep_slug}&sv=${item.server_idx}&t=${Math.floor(item.currentTime)}`;
                         
                         return `
-                        <div class="flex gap-2.5 sm:gap-3 bg-slate-900/70 backdrop-blur-sm border border-slate-800/60 p-2.5 sm:p-3 rounded-2xl relative group hover:border-slate-700 hover:shadow-xl transition-all duration-300">
-                            <a href="${targetUrl}" class="shrink-0 w-20 sm:w-24 aspect-[3/4] sm:aspect-[2/3] rounded-xl overflow-hidden bg-slate-800 relative">
+                        <div class="flex gap-3 bg-slate-900/80 backdrop-blur-sm border border-slate-800 p-2.5 md:p-3 rounded-xl md:rounded-2xl relative group hover:border-slate-700 transition">
+                            <a href="${targetUrl}" class="shrink-0 w-20 sm:w-24 aspect-[2/3] rounded-lg md:rounded-xl overflow-hidden bg-slate-800 relative">
                                 <img src="${getImageUrl(item.poster_url || item.thumb_url)}" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                    <i data-lucide="play-circle" class="w-7 h-7 sm:w-8 sm:h-8 text-white fill-brand drop-shadow-lg"></i>
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                    <i data-lucide="play-circle" class="w-6 h-6 md:w-8 md:h-8 text-white fill-brand"></i>
                                 </div>
                             </a>
 
@@ -738,26 +708,26 @@
                                     <h3 class="font-bold text-xs sm:text-sm text-slate-100 line-clamp-1 group-hover:text-brand transition">${item.name}</h3>
                                     <p class="text-[10px] sm:text-xs text-slate-400 line-clamp-1 mt-0.5">${item.origin_name}</p>
                                     
-                                    <div class="mt-1.5 sm:mt-2 space-y-1">
+                                    <div class="mt-1.5 md:mt-2 space-y-1">
                                         <div class="text-[10px] sm:text-[11px] text-amber-400 font-semibold">
                                             📺 ${item.ep_name || 'Tập phim'} (${item.server_name || 'Server'})
                                         </div>
                                         <div class="text-[9px] sm:text-[10px] text-slate-400">
-                                            ⏱️ ${formatTime(item.currentTime)} / ${formatTime(item.duration)} (${percent}%)
+                                            ⏱️ Vị trí: ${formatTime(item.currentTime)} / ${formatTime(item.duration)} (${percent}%)
                                         </div>
                                         
                                         <!-- Progress Bar -->
-                                        <div class="w-full h-1 sm:h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1">
-                                            <div class="h-full bg-brand rounded-full transition-all duration-300" style="width: ${percent}%"></div>
+                                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1">
+                                            <div class="h-full bg-brand rounded-full" style="width: ${percent}%"></div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center justify-between gap-1.5 mt-2 sm:mt-3 pt-2 border-t border-slate-800/60">
-                                    <a href="${targetUrl}" class="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-brand/20 hover:bg-brand text-brand hover:text-white rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center gap-1">
+                                <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-slate-800/60">
+                                    <a href="${targetUrl}" class="px-2.5 py-1 sm:px-3 sm:py-1 bg-brand/20 hover:bg-brand text-brand hover:text-white rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center gap-1">
                                         <i data-lucide="play" class="w-3 h-3 fill-current"></i> Xem tiếp
                                     </a>
-                                    <button data-remove-slug="${item.slug}" class="btn-remove-history p-1 sm:p-1.5 text-slate-500 hover:text-red-400 transition rounded-lg hover:bg-red-400/10" title="Xóa khỏi lịch sử">
+                                    <button data-remove-slug="${item.slug}" class="btn-remove-history p-1 text-slate-500 hover:text-red-400 transition" title="Xóa khỏi lịch sử">
                                         <i data-lucide="trash" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                                     </button>
                                 </div>
@@ -765,78 +735,75 @@
                         </div>`;
                     }).join('')}
                 </div>`;
-                }
+            }
 
-                html += `</div>`;
-                document.getElementById('app-content').innerHTML = html;
-                lucide.createIcons();
+            html += `</div>`;
+            document.getElementById('app-content').innerHTML = html;
+            lucide.createIcons();
 
-                // Sự kiện Xóa từng phim
-                document.querySelectorAll('.btn-remove-history').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const slug = btn.getAttribute('data-remove-slug');
-                        if (slug) {
-                            removeHistoryItem(slug);
-                            viewHistory(); // Re-render
-                        }
-                    });
+            // Sự kiện Xóa từng phim
+            document.querySelectorAll('.btn-remove-history').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const slug = btn.getAttribute('data-remove-slug');
+                    if (slug) {
+                        removeHistoryItem(slug);
+                        viewHistory(); // Re-render
+                    }
                 });
+            });
 
-                // Sự kiện Xóa toàn bộ
-                const btnClearAll = document.getElementById('btn-clear-all-history');
-                if (btnClearAll) {
-                    btnClearAll.addEventListener('click', () => {
-                        if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử xem phim không?')) {
-                            clearAllHistory();
-                            viewHistory();
-                        }
-                    });
+            // Sự kiện Xóa toàn bộ
+            const btnClearAll = document.getElementById('btn-clear-all-history');
+            if (btnClearAll) {
+                btnClearAll.addEventListener('click', () => {
+                    if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử xem phim không?')) {
+                        clearAllHistory();
+                        viewHistory();
+                    }
+                });
+            }
+        }
+
+        async function viewMovieDetail(slug, queryParams) {
+            if (!cachedMovieData || cachedMovieData.movie?.slug !== slug) {
+                showSkeleton();
+                try {
+                    const res = await fetch(`${API_BASE}/phim/${slug}`).then(r => r.json());
+                    if (!res.status) {
+                        document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">Phim không tồn tại.</p>';
+                        return;
+                    }
+                    cachedMovieData = res;
+                } catch (err) {
+                    document.getElementById('app-content').innerHTML = '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải chi tiết phim.</p>';
+                    return;
                 }
             }
 
-            async function viewMovieDetail(slug, queryParams) {
-                if (!cachedMovieData || cachedMovieData.movie?.slug !== slug) {
-                    showSkeleton();
-                    try {
-                        const res = await fetch(`${API_BASE}/phim/${slug}`).then(r => r.json());
-                        if (!res.status) {
-                            document.getElementById('app-content').innerHTML =
-                                '<p class="text-center py-20 text-red-400">Phim không tồn tại.</p>';
-                            return;
-                        }
-                        cachedMovieData = res;
-                    } catch (err) {
-                        document.getElementById('app-content').innerHTML =
-                            '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải chi tiết phim.</p>';
-                        return;
-                    }
-                }
+            const movie = cachedMovieData.movie;
+            const episodes = cachedMovieData.episodes || [];
+            const activeEpSlug = queryParams.ep || '';
+            const activeServerIdx = parseInt(queryParams.sv || '0', 10);
+            const startTime = parseFloat(queryParams.t || '0');
 
-                const movie = cachedMovieData.movie;
-                const episodes = cachedMovieData.episodes || [];
-                const activeEpSlug = queryParams.ep || '';
-                const activeServerIdx = parseInt(queryParams.sv || '0', 10);
-                const startTime = parseFloat(queryParams.t || '0');
+            // Kiểm tra Lịch Sử của Phim này
+            const savedHistory = getWatchHistory()[slug];
 
-                // Kiểm tra Lịch Sử của Phim này
-                const savedHistory = getWatchHistory()[slug];
+            let currentPlayingEp = null;
+            if (activeEpSlug && episodes[activeServerIdx]) {
+                currentPlayingEp = episodes[activeServerIdx].server_data.find(e => e.slug === activeEpSlug);
+            }
 
-                let currentPlayingEp = null;
-                if (activeEpSlug && episodes[activeServerIdx]) {
-                    currentPlayingEp = episodes[activeServerIdx].server_data.find(e => e.slug === activeEpSlug);
-                }
-
-                // Xây dựng nút Continue Xem Phim nếu có trong lịch sử
-                let continueBanner = '';
-                if (savedHistory && !currentPlayingEp) {
-                    const targetUrl =
-                        `#/phim/${movie.slug}?ep=${savedHistory.ep_slug}&sv=${savedHistory.server_idx}&t=${Math.floor(savedHistory.currentTime)}`;
-                    continueBanner = `
-                <div class="mb-4 p-3 sm:p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex flex-wrap items-center justify-between gap-3 animate-fade-in backdrop-blur-sm">
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <div class="p-2 sm:p-2.5 bg-amber-500/20 text-amber-400 rounded-xl">
-                            <i data-lucide="history" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            // Xây dựng nút Continue Xem Phim nếu có trong lịch sử
+            let continueBanner = '';
+            if (savedHistory && !currentPlayingEp) {
+                const targetUrl = `#/phim/${movie.slug}?ep=${savedHistory.ep_slug}&sv=${savedHistory.server_idx}&t=${Math.floor(savedHistory.currentTime)}`;
+                continueBanner = `
+                <div class="mb-3 md:mb-4 p-3 md:p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl md:rounded-2xl flex flex-wrap items-center justify-between gap-2 animate-fade-in">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <div class="p-2 bg-amber-500/20 text-amber-400 rounded-lg md:rounded-xl">
+                            <i data-lucide="history" class="w-4 h-4 md:w-5 md:h-5"></i>
                         </div>
                         <div>
                             <p class="text-[10px] sm:text-xs text-amber-300 font-bold">Lịch Sử Xem Phim</p>
@@ -845,37 +812,37 @@
                             </p>
                         </div>
                     </div>
-                    <a href="${targetUrl}" class="px-3 sm:px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
-                        <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Tiếp tục xem
+                    <a href="${targetUrl}" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-lg md:rounded-xl text-[10px] sm:text-xs transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
+                        <i data-lucide="play" class="w-3.5 h-3.5 md:w-4 md:h-4 fill-current"></i> Tiếp tục xem
                     </a>
                 </div>`;
-                }
+            }
 
-                const html = `
-            <div class="space-y-6 sm:space-y-8 animate-fade-in">
-                <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-400">
+            const html = `
+            <div class="space-y-4 md:space-y-8 animate-fade-in">
+                <div class="flex items-center gap-1.5 text-xs sm:text-sm text-slate-400 flex-wrap">
                     <a href="#/" class="hover:text-brand transition">Trang chủ</a>
-                    <i data-lucide="chevron-right" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
-                    <span class="text-slate-300 truncate">${movie.name}</span>
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <span class="text-slate-300 font-medium">${movie.name}</span>
                 </div>
 
                 ${continueBanner}
 
                 <!-- KHU VỰC PLAYER / BANNER -->
-                <div id="media-container" class="w-full rounded-2xl overflow-hidden bg-black border border-slate-800/60 shadow-2xl">
+                <div id="media-container" class="w-full rounded-xl md:rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
                     ${currentPlayingEp ? `
                         <div class="aspect-video w-full bg-black relative">
                             <video id="hls-player" controls class="w-full h-full object-contain" poster="${getImageUrl(movie.thumb_url)}"></video>
                         </div>
                     ` : `
-                        <div class="relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] w-full">
+                        <div class="relative aspect-[16/9] md:aspect-[21/9] w-full">
                             <img src="${getImageUrl(movie.thumb_url || movie.poster_url)}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 md:p-10">
-                                <h1 class="text-xl sm:text-2xl md:text-4xl font-extrabold text-white mb-1 sm:mb-2 drop-shadow-lg">${movie.name}</h1>
-                                <p class="text-xs sm:text-sm text-slate-200 mb-3 sm:mb-4">${movie.origin_name} (${movie.year})</p>
+                                <h1 class="text-xl sm:text-2xl md:text-4xl font-extrabold text-white mb-1 drop-shadow-lg">${movie.name}</h1>
+                                <p class="text-xs sm:text-sm text-slate-200 mb-3">${movie.origin_name} (${movie.year})</p>
                                 ${episodes.length > 0 && episodes[0].server_data.length > 0 ? `
-                                    <a href="#/phim/${movie.slug}?ep=${episodes[0].server_data[0].slug}&sv=${activeServerIdx}" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-sm transition shadow-xl shadow-brand/20 w-fit">
-                                        <i data-lucide="play" class="w-4 h-4 sm:w-5 sm:h-5 fill-white"></i> ▶ Xem phim
+                                    <a href="#/phim/${movie.slug}?ep=${episodes[0].server_data[0].slug}&sv=${activeServerIdx}" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition shadow-xl shadow-brand/20 w-fit">
+                                        <i data-lucide="play" class="w-4 h-4 md:w-5 md:h-5 fill-white"></i> ▶ Xem phim
                                     </a>
                                 ` : ''}
                             </div>
@@ -883,261 +850,247 @@
                     `}
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-                    <div class="lg:col-span-2 space-y-5 sm:space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+                    <div class="lg:col-span-2 space-y-4 md:space-y-6">
                         ${episodes.length > 0 ? `
-                            <div class="bg-slate-900/70 backdrop-blur-sm border border-slate-800/60 rounded-2xl p-4 sm:p-5 space-y-4">
+                            <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-xl md:rounded-2xl p-3 md:p-5 space-y-3 md:space-y-4">
                                 <!-- DANH SÁCH SERVER -->
-                                <div class="flex items-center gap-2 border-b border-slate-800/60 pb-3 overflow-x-auto scrollbar-hide">
+                                <div class="flex items-center gap-1.5 border-b border-slate-800 pb-2.5 overflow-x-auto">
                                     <span class="text-[10px] sm:text-xs font-bold uppercase text-slate-400 mr-1 shrink-0">📡 Server:</span>
                                     ${episodes.map((s, i) => {
                                         const epParam = activeEpSlug ? `&ep=${activeEpSlug}` : '';
-                                        return `<a href="#/phim/${movie.slug}?sv=${i}${epParam}" class="px-3 py-1.5 text-[10px] sm:text-xs font-semibold rounded-lg transition shrink-0 ${i===activeServerIdx?'bg-brand text-white shadow-lg shadow-brand/20':'bg-slate-800/80 text-slate-300 hover:bg-slate-700'}">${s.server_name}</a>`;
+                                        return `<a href="#/phim/${movie.slug}?sv=${i}${epParam}" class="px-2.5 py-1 text-[10px] sm:text-xs font-semibold rounded-lg transition shrink-0 ${i===activeServerIdx?'bg-brand text-white':'bg-slate-800 text-slate-300 hover:bg-slate-700'}">${s.server_name}</a>`;
                                     }).join('')}
                                 </div>
 
                                 <!-- DANH SÁCH TẬP PHIM -->
                                 <div>
-                                    <h3 class="text-xs sm:text-sm font-bold text-slate-300 mb-2 sm:mb-3">📂 Danh sách tập</h3>
-                                    <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-6 xl:grid-cols-8 gap-1.5 sm:gap-2 max-h-52 sm:max-h-60 overflow-y-auto pr-1">
+                                    <h3 class="text-xs sm:text-sm font-bold text-slate-300 mb-2">📂 Danh sách tập</h3>
+                                    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-1.5 sm:gap-2 max-h-48 md:max-h-60 overflow-y-auto pr-1">
                                         ${(episodes[activeServerIdx]?.server_data || []).map(ep => {
                                             const isActive = ep.slug === activeEpSlug;
-                                            return `<a href="#/phim/${movie.slug}?ep=${ep.slug}&sv=${activeServerIdx}" class="px-1.5 sm:px-2 py-1.5 sm:py-2 text-center text-[10px] sm:text-xs font-bold rounded-lg transition border ${isActive?'bg-brand text-white border-brand shadow-lg shadow-brand/20':'bg-slate-800/80 border-slate-700/50 text-slate-300 hover:bg-slate-700'}">${ep.name}</a>`;
+                                            return `<a href="#/phim/${movie.slug}?ep=${ep.slug}&sv=${activeServerIdx}" class="px-1.5 py-1.5 sm:px-2 sm:py-2 text-center text-[10px] sm:text-xs font-bold rounded-lg transition border ${isActive?'bg-brand text-white border-brand shadow-lg shadow-brand/20':'bg-slate-800 border-slate-700/50 text-slate-300 hover:bg-slate-700'}">${ep.name}</a>`;
                                         }).join('')}
                                     </div>
                                 </div>
                             </div>
                         ` : '<p class="text-slate-400 italic text-sm">⏳ Chưa có tập phát sóng.</p>'}
 
-                        <div class="bg-slate-900/70 backdrop-blur-sm border border-slate-800/60 rounded-2xl p-4 sm:p-5 space-y-3">
-                            <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 sm:w-5 sm:h-5 text-brand"></i> 📖 Nội dung phim</h3>
+                        <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-xl md:rounded-2xl p-3 md:p-5 space-y-2 md:space-y-3">
+                            <h3 class="text-base md:text-lg font-bold text-white flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 md:w-5 md:h-5 text-brand"></i> 📖 Nội dung phim</h3>
                             <div class="text-xs sm:text-sm text-slate-300 leading-relaxed">${movie.content || 'Đang cập nhật...'}</div>
                         </div>
                     </div>
 
-                    <div class="space-y-5 sm:space-y-6">
-                        <div class="bg-slate-900/70 backdrop-blur-sm border border-slate-800/60 rounded-2xl p-4 sm:p-5 space-y-4 sticky top-20">
-                            <div class="flex gap-3 sm:gap-4">
-                                <img src="${getImageUrl(movie.poster_url)}" class="w-20 h-28 sm:w-24 sm:h-36 object-cover rounded-xl border border-slate-800/60 shadow-lg">
+                    <div class="space-y-4 md:space-y-6">
+                        <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-xl md:rounded-2xl p-3 md:p-5 space-y-3 md:space-y-4 sticky top-20">
+                            <div class="flex gap-3 md:gap-4">
+                                <img src="${getImageUrl(movie.poster_url)}" class="w-20 sm:w-24 h-28 sm:h-36 object-cover rounded-lg md:rounded-xl border border-slate-800 shadow-lg">
                                 <div>
-                                    <h2 class="font-bold text-white text-sm sm:text-base">${movie.name}</h2>
+                                    <h2 class="font-bold text-sm sm:text-base text-white">${movie.name}</h2>
                                     <p class="text-[10px] sm:text-xs text-slate-400">${movie.origin_name}</p>
-                                    <div class="flex flex-wrap gap-1 mt-2">
-                                        <span class="px-2 py-0.5 bg-brand/20 text-brand font-bold text-[9px] sm:text-[10px] rounded border border-brand/30">${movie.quality||'HD'}</span>
-                                        <span class="px-2 py-0.5 bg-slate-800/80 text-slate-300 font-bold text-[9px] sm:text-[10px] rounded">${movie.lang||'Vietsub'}</span>
+                                    <div class="flex flex-wrap gap-1 mt-1.5">
+                                        <span class="px-1.5 py-0.5 bg-brand/20 text-brand font-bold text-[9px] sm:text-[10px] rounded border border-brand/30">${movie.quality||'HD'}</span>
+                                        <span class="px-1.5 py-0.5 bg-slate-800 text-slate-300 font-bold text-[9px] sm:text-[10px] rounded">${movie.lang||'Vietsub'}</span>
                                     </div>
                                 </div>
                             </div>
-                            <hr class="border-slate-800/60">
-                            <ul class="space-y-2 text-[10px] sm:text-xs text-slate-300">
+                            <hr class="border-slate-800">
+                            <ul class="space-y-1.5 text-[10px] sm:text-xs text-slate-300">
                                 <li class="flex justify-between"><span class="text-slate-500">Trạng thái</span> <span class="font-medium text-brand">${movie.episode_current}</span></li>
                                 <li class="flex justify-between"><span class="text-slate-500">Thời lượng</span> <span>${movie.time||'N/A'}</span></li>
                                 <li class="flex justify-between"><span class="text-slate-500">Năm</span> <span>${movie.year}</span></li>
                                 <li class="flex justify-between"><span class="text-slate-500">Quốc gia</span> <span>${(movie.country||[]).map(c=>c.name).join(', ')}</span></li>
-                                <li><span class="text-slate-500 block mb-1">Thể loại</span><div class="flex flex-wrap gap-1">${(movie.category||[]).map(c=>`<span class="px-2 py-0.5 bg-slate-800/80 rounded text-[10px]">${c.name}</span>`).join('')}</div></li>
-                                <li><span class="text-slate-500">Đạo diễn</span> <span>${(movie.director||[]).join(', ')||'N/A'}</span></li>
-                                <li><span class="text-slate-500">Diễn viên</span> <span>${(movie.actor||[]).join(', ')||'N/A'}</span></li>
+                                <li><span class="text-slate-500 block mb-0.5">Thể loại</span><div class="flex flex-wrap gap-1">${(movie.category||[]).map(c=>`<span class="px-1.5 py-0.5 bg-slate-800 rounded text-[9px] sm:text-[10px]">${c.name}</span>`).join('')}</div></li>
+                                <li class="flex justify-between"><span class="text-slate-500">Đạo diễn</span> <span>${(movie.director||[]).join(', ')||'N/A'}</span></li>
+                                <li class="flex justify-between"><span class="text-slate-500">Diễn viên</span> <span class="text-right">${(movie.actor||[]).join(', ')||'N/A'}</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>`;
 
-                document.getElementById('app-content').innerHTML = html;
-                lucide.createIcons();
+            document.getElementById('app-content').innerHTML = html;
+            lucide.createIcons();
 
-                // Tải Trình Phát Video
-                if (currentPlayingEp && currentPlayingEp.link_m3u8) {
-                    const currentServerName = episodes[activeServerIdx]?.server_name || 'Server HD';
-                    const currentEpName = currentPlayingEp.name || 'Tập phim';
+            // Tải Trình Phát Video
+            if (currentPlayingEp && currentPlayingEp.link_m3u8) {
+                const currentServerName = episodes[activeServerIdx]?.server_name || 'Server HD';
+                const currentEpName = currentPlayingEp.name || 'Tập phim';
 
-                    initHlsPlayer(currentPlayingEp.link_m3u8, startTime, {
-                        slug: movie.slug,
-                        name: movie.name,
-                        origin_name: movie.origin_name,
-                        poster_url: movie.poster_url,
-                        thumb_url: movie.thumb_url,
-                        ep_slug: activeEpSlug,
-                        ep_name: currentEpName,
-                        server_idx: activeServerIdx,
-                        server_name: currentServerName
-                    });
+                initHlsPlayer(currentPlayingEp.link_m3u8, startTime, {
+                    slug: movie.slug,
+                    name: movie.name,
+                    origin_name: movie.origin_name,
+                    poster_url: movie.poster_url,
+                    thumb_url: movie.thumb_url,
+                    ep_slug: activeEpSlug,
+                    ep_name: currentEpName,
+                    server_idx: activeServerIdx,
+                    server_name: currentServerName
+                });
 
-                    document.getElementById('media-container').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('media-container').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // HLS Player qua Proxy + Tự động lưu tiến trình Lịch Sử
+        function initHlsPlayer(url, startTime = 0, movieMeta = null) {
+            const video = document.getElementById('hls-player');
+            if (!video) return;
+
+            const proxiedUrl = `/proxy-stream?url=${encodeURIComponent(url)}`;
+            if (currentHls) currentHls.destroy();
+
+            // Hàm seek đến vị trí lịch sử khi video đã tải đủ dữ liệu
+            let initialSeekDone = false;
+            const applyStartTime = () => {
+                if (!initialSeekDone && startTime > 0) {
+                    video.currentTime = startTime;
+                    initialSeekDone = true;
                 }
+            };
+
+            if (Hls.isSupported()) {
+                currentHls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
+                currentHls.loadSource(proxiedUrl);
+                currentHls.attachMedia(video);
+                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    applyStartTime();
+                    video.play().catch(() => {});
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = proxiedUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    applyStartTime();
+                    video.play().catch(() => {});
+                });
             }
 
-            // HLS Player qua Proxy + Tự động lưu tiến trình Lịch Sử
-            function initHlsPlayer(url, startTime = 0, movieMeta = null) {
-                const video = document.getElementById('hls-player');
-                if (!video) return;
-
-                const proxiedUrl = `/proxy-stream?url=${encodeURIComponent(url)}`;
-                if (currentHls) currentHls.destroy();
-
-                // Hàm seek đến vị trí lịch sử khi video đã tải đủ dữ liệu
-                let initialSeekDone = false;
-                const applyStartTime = () => {
-                    if (!initialSeekDone && startTime > 0) {
-                        video.currentTime = startTime;
-                        initialSeekDone = true;
+            // Tự động lưu Lịch sử xem phim liên tục
+            if (movieMeta) {
+                let lastSaved = 0;
+                const updateHistory = () => {
+                    if (video.duration && !isNaN(video.duration)) {
+                        saveWatchProgress({
+                            ...movieMeta,
+                            currentTime: video.currentTime,
+                            duration: video.duration
+                        });
                     }
                 };
 
-                if (Hls.isSupported()) {
-                    currentHls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
-                    currentHls.loadSource(proxiedUrl);
-                    currentHls.attachMedia(video);
-                    currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        applyStartTime();
-                        video.play().catch(() => {});
-                    });
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = proxiedUrl;
-                    video.addEventListener('loadedmetadata', () => {
-                        applyStartTime();
-                        video.play().catch(() => {});
-                    });
-                }
-
-                // Tự động lưu Lịch sử xem phim liên tục
-                if (movieMeta) {
-                    let lastSaved = 0;
-                    const updateHistory = () => {
-                        if (video.duration && !isNaN(video.duration)) {
-                            saveWatchProgress({
-                                ...movieMeta,
-                                currentTime: video.currentTime,
-                                duration: video.duration
-                            });
-                        }
-                    };
-
-                    video.ontimeupdate = () => {
-                        const now = Date.now();
-                        if (now - lastSaved > 3000) { // Lưu mỗi 3 giây
-                            lastSaved = now;
-                            updateHistory();
-                        }
-                    };
-
-                    video.onpause = updateHistory;
-                    window.onbeforeunload = updateHistory;
-                }
-            }
-
-            // ========== ROUTER XỬ LÝ ĐƯỜNG DẪN ==========
-            async function router() {
-                closeMobileMenu();
-                if (currentHls) { currentHls.destroy();
-                    currentHls = null; }
-
-                // TỰ ĐỘNG CUỘN LÊN ĐẦU TRANG
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                const { route, subRoute, queryParams } = parseHash();
-                const page = queryParams.page || 1;
-
-                if (route !== 'phim') {
-                    cachedMovieData = null;
-                }
-
-                if (route === 'home' || route === '') {
-                    await viewHome();
-                } else if (route === 'lich-su') {
-                    await viewHistory();
-                } else if (route === 'danh-sach') {
-                    const titles = {
-                        'phim-bo': 'Phim Bộ',
-                        'phim-le': 'Phim Lẻ',
-                        'phim-chieu-rap': 'Phim Chiếu Rạp',
-                        'hoat-hinh': 'Hoạt Hình',
-                        'tv-shows': 'TV Shows'
-                    };
-                    await viewCatalog(`${API_BASE}/v1/api/danh-sach/${subRoute}?page=${page}`, titles[subRoute] ||
-                        'Danh Sách', `#/danh-sach/${subRoute}?`);
-
-                } else if (route === 'the-loai') {
-                    await viewCatalog(`${API_BASE}/v1/api/the-loai/${subRoute}?page=${page}`,
-                        `Thể loại: ${subRoute}`, `#/the-loai/${subRoute}?`);
-
-                } else if (route === 'quoc-gia') {
-                    await viewCatalog(`${API_BASE}/v1/api/quoc-gia/${subRoute}?page=${page}`,
-                        `Quốc gia: ${subRoute}`, `#/quoc-gia/${subRoute}?`);
-
-                } else if (route === 'nam') {
-                    await viewCatalog(`${API_BASE}/v1/api/nam/${subRoute}?page=${page}`, `Phim năm ${subRoute}`,
-                        `#/nam/${subRoute}?`);
-
-                } else if (route === 'tim-kiem') {
-                    await viewSearch(queryParams.keyword || '', page);
-                } else if (route === 'phim') {
-                    await viewMovieDetail(subRoute, queryParams);
-                } else {
-                    await viewHome();
-                }
-            }
-
-            // ========== EVENTS ==========
-            window.addEventListener('hashchange', router);
-            window.addEventListener('DOMContentLoaded', () => {
-                loadHeaderMenus();
-                router();
-
-                document.getElementById('mobile-menu').addEventListener('click', (e) => {
-                    if (e.target.closest('a')) {
-                        closeMobileMenu();
-                    }
-                });
-
-                document.getElementById('search-form').addEventListener('submit', e => {
-                    e.preventDefault();
-                    const kw = document.getElementById('search-input').value.trim();
-                    if (kw) window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
-                });
-
-                document.getElementById('search-form-mobile').addEventListener('submit', e => {
-                    e.preventDefault();
-                    const kw = document.getElementById('search-input-mobile').value.trim();
-                    if (kw) {
-                        window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
-                        closeMobileMenu();
-                    }
-                });
-
-                const menuBtn = document.getElementById('mobile-menu-btn');
-                const mobileMenu = document.getElementById('mobile-menu');
-                menuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                    const icon = menuBtn.querySelector('i');
-                    if (mobileMenu.classList.contains('hidden')) {
-                        icon.setAttribute('data-lucide', 'menu');
-                    } else {
-                        icon.setAttribute('data-lucide', 'x');
-                    }
-                    lucide.createIcons();
-                });
-
-                const backBtn = document.getElementById('back-to-top');
-                const handleScroll = () => {
-                    if (window.scrollY > 400) {
-                        backBtn.classList.remove('opacity-0', 'invisible', 'translate-y-4');
-                    } else {
-                        backBtn.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                video.ontimeupdate = () => {
+                    const now = Date.now();
+                    if (now - lastSaved > 3000) { // Lưu mỗi 3 giây
+                        lastSaved = now;
+                        updateHistory();
                     }
                 };
-                window.addEventListener('scroll', handleScroll, { passive: true });
-                backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-                // Xử lý orientation change để cập nhật giao diện
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => {
-                        if (homeSwiper) homeSwiper.update();
-                        lucide.createIcons();
-                    }, 300);
-                });
+                video.onpause = updateHistory;
+                window.onbeforeunload = updateHistory;
+            }
+        }
+
+        // ========== ROUTER XỬ LÝ ĐƯỜNG DẪN ==========
+        async function router() {
+            closeMobileMenu();
+            if (currentHls) { currentHls.destroy(); currentHls = null; }
+
+            // TỰ ĐỘNG CUỘN LÊN ĐẦU TRANG
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const { route, subRoute, queryParams } = parseHash();
+            const page = queryParams.page || 1;
+
+            if (route !== 'phim') {
+                cachedMovieData = null;
+            }
+
+            if (route === 'home' || route === '') {
+                await viewHome();
+            } else if (route === 'lich-su') {
+                await viewHistory();
+            } else if (route === 'danh-sach') {
+                const titles = { 
+                    'phim-bo': 'Phim Bộ',
+                    'phim-le': 'Phim Lẻ',
+                    'phim-chieu-rap': 'Phim Chiếu Rạp',
+                    'hoat-hinh': 'Hoạt Hình',
+                    'tv-shows': 'TV Shows' 
+                };
+                await viewCatalog(`${API_BASE}/v1/api/danh-sach/${subRoute}?page=${page}`, titles[subRoute] || 'Danh Sách', `#/danh-sach/${subRoute}?`);
+
+            } else if (route === 'the-loai') {
+                await viewCatalog(`${API_BASE}/v1/api/the-loai/${subRoute}?page=${page}`, `Thể loại: ${subRoute}`, `#/the-loai/${subRoute}?`);
+
+            } else if (route === 'quoc-gia') {
+                await viewCatalog(`${API_BASE}/v1/api/quoc-gia/${subRoute}?page=${page}`, `Quốc gia: ${subRoute}`, `#/quoc-gia/${subRoute}?`);
+
+            } else if (route === 'nam') {
+                await viewCatalog(`${API_BASE}/v1/api/nam/${subRoute}?page=${page}`, `Phim năm ${subRoute}`, `#/nam/${subRoute}?`);
+
+            } else if (route === 'tim-kiem') {
+                await viewSearch(queryParams.keyword || '', page);
+            } else if (route === 'phim') {
+                await viewMovieDetail(subRoute, queryParams);
+            } else {
+                await viewHome();
+            }
+        }
+
+        // ========== EVENTS ==========
+        window.addEventListener('hashchange', router);
+        window.addEventListener('DOMContentLoaded', () => {
+            loadHeaderMenus();
+            router();
+
+            document.getElementById('mobile-menu').addEventListener('click', (e) => {
+                if (e.target.closest('a')) {
+                    closeMobileMenu();
+                }
             });
-        })();
-    </script>
+
+            document.getElementById('search-form').addEventListener('submit', e => {
+                e.preventDefault();
+                const kw = document.getElementById('search-input').value.trim();
+                if (kw) window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
+            });
+
+            document.getElementById('search-form-mobile').addEventListener('submit', e => {
+                e.preventDefault();
+                const kw = document.getElementById('search-input-mobile').value.trim();
+                if (kw) {
+                    window.location.hash = `#/tim-kiem?keyword=${encodeURIComponent(kw)}`;
+                    closeMobileMenu();
+                }
+            });
+
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const icon = menuBtn.querySelector('i');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.setAttribute('data-lucide', 'menu');
+                } else {
+                    icon.setAttribute('data-lucide', 'x');
+                }
+                lucide.createIcons();
+            });
+
+            const backBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 400) {
+                    backBtn.classList.remove('opacity-0', 'invisible', 'translate-y-2');
+                } else {
+                    backBtn.classList.add('opacity-0', 'invisible', 'translate-y-2');
+                }
+            });
+            backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        });
+    })();
+</script>
 </body>
 </html>
