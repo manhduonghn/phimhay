@@ -136,6 +136,11 @@
                     <span class="col-span-3 text-xs text-slate-500 text-center py-2">Đang tải...</span>
                 </div>
             </div>
+
+            <!-- Lịch sử xem -->
+            <a href="#/lich-su" class="hover:text-brand transition flex items-center gap-1.5 text-amber-400 font-semibold">
+                <i data-lucide="history" class="w-4 h-4"></i> Lịch Sử
+            </a>
         </nav>
 
         <!-- Search + Mobile Toggle -->
@@ -155,6 +160,9 @@
     <!-- Mobile Menu Panel -->
     <div id="mobile-menu" class="md:hidden hidden bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto animate-fade-in">
         <a href="#/" class="block py-2 text-sm font-medium hover:text-brand">Trang Chủ</a>
+        <a href="#/lich-su" class="block py-2 text-sm font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-2">
+            <i data-lucide="history" class="w-4 h-4"></i> Lịch Sử Xem Phim
+        </a>
         <a href="#/danh-sach/phim-bo" class="block py-2 text-sm font-medium hover:text-brand">Phim Bộ</a>
         <a href="#/danh-sach/phim-le" class="block py-2 text-sm font-medium hover:text-brand">Phim Lẻ</a>
         <a href="#/danh-sach/phim-chieu-rap" class="block py-2 text-sm font-medium hover:text-brand">Phim Chiếu Rạp</a>
@@ -198,13 +206,14 @@
     (function() {
         const API_BASE = 'https://phimapi.com';
         const IMG_DOMAIN = 'https://phimimg.com';
+        const HISTORY_KEY = 'phimflix_history_v1';
 
         let currentHls = null;
         let categoriesCache = [];
         let countriesCache = [];
         let yearsCache = [];
         let homeSwiper = null;
-        let cachedMovieData = null; // Cache dữ liệu trang chi tiết phim
+        let cachedMovieData = null;
 
         // Đăng ký Service Worker
         if ('serviceWorker' in navigator) {
@@ -213,6 +222,54 @@
                     .then(reg => console.log('Service Worker đã sẵn sàng:', reg.scope))
                     .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
             });
+        }
+
+        // --- HÀM XỬ LÝ LỊCH SỬ XEM PHIM ---
+        function getWatchHistory() {
+            try {
+                return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveWatchProgress(movieInfo) {
+            if (!movieInfo || !movieInfo.slug) return;
+            const history = getWatchHistory();
+            history[movieInfo.slug] = {
+                slug: movieInfo.slug,
+                name: movieInfo.name,
+                origin_name: movieInfo.origin_name || '',
+                poster_url: movieInfo.poster_url || '',
+                thumb_url: movieInfo.thumb_url || '',
+                ep_slug: movieInfo.ep_slug,
+                ep_name: movieInfo.ep_name,
+                server_idx: movieInfo.server_idx,
+                server_name: movieInfo.server_name,
+                currentTime: movieInfo.currentTime || 0,
+                duration: movieInfo.duration || 0,
+                updatedAt: Date.now()
+            };
+            try {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+            } catch (e) { console.error('Lỗi lưu lịch sử:', e); }
+        }
+
+        function removeHistoryItem(slug) {
+            const history = getWatchHistory();
+            delete history[slug];
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        }
+
+        function clearAllHistory() {
+            localStorage.removeItem(HISTORY_KEY);
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds) || seconds < 0) return '00:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
         // --- Helpers ---
@@ -482,8 +539,117 @@
             }
         }
 
+        // TRANG LỊCH SỬ XEM PHIM (URL: #/lich-su)
+        async function viewHistory() {
+            const historyMap = getWatchHistory();
+            const items = Object.values(historyMap).sort((a, b) => b.updatedAt - a.updatedAt);
+
+            let html = `
+            <div class="space-y-6 animate-fade-in">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <i data-lucide="history" class="w-7 h-7 text-amber-400"></i> Lịch Sử Xem Phim
+                        </h1>
+                        <p class="text-xs text-slate-400 mt-1">Đã lưu ${items.length} phim bạn đang xem dở</p>
+                    </div>
+                    ${items.length > 0 ? `
+                        <button id="btn-clear-all-history" class="px-4 py-2 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-red-500/30">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i> Xóa tất cả
+                        </button>
+                    ` : ''}
+                </div>`;
+
+            if (items.length === 0) {
+                html += `
+                <div class="text-center py-20 space-y-4">
+                    <div class="inline-flex p-4 bg-slate-900 text-slate-500 rounded-full">
+                        <i data-lucide="film" class="w-12 h-12"></i>
+                    </div>
+                    <p class="text-slate-400 text-sm">Bạn chưa có lịch sử xem phim nào.</p>
+                    <a href="#/" class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand hover:bg-brand-dark text-white rounded-xl text-sm font-bold transition">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> Khám phá phim ngay
+                    </a>
+                </div>`;
+            } else {
+                html += `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    ${items.map(item => {
+                        const percent = item.duration > 0 ? Math.min(100, Math.round((item.currentTime / item.duration) * 100)) : 0;
+                        const targetUrl = `#/phim/${item.slug}?ep=${item.ep_slug}&sv=${item.server_idx}&t=${Math.floor(item.currentTime)}`;
+                        
+                        return `
+                        <div class="flex gap-3 bg-slate-900/80 backdrop-blur-sm border border-slate-800 p-3 rounded-2xl relative group hover:border-slate-700 transition">
+                            <a href="${targetUrl}" class="shrink-0 w-24 aspect-[2/3] rounded-xl overflow-hidden bg-slate-800 relative">
+                                <img src="${getImageUrl(item.poster_url || item.thumb_url)}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                    <i data-lucide="play-circle" class="w-8 h-8 text-white fill-brand"></i>
+                                </div>
+                            </a>
+
+                            <div class="flex flex-col justify-between flex-1 min-w-0">
+                                <div>
+                                    <h3 class="font-bold text-sm text-slate-100 line-clamp-1 group-hover:text-brand transition">${item.name}</h3>
+                                    <p class="text-xs text-slate-400 line-clamp-1 mt-0.5">${item.origin_name}</p>
+                                    
+                                    <div class="mt-2 space-y-1">
+                                        <div class="text-[11px] text-amber-400 font-semibold">
+                                            📺 ${item.ep_name || 'Tập phim'} (${item.server_name || 'Server'})
+                                        </div>
+                                        <div class="text-[10px] text-slate-400">
+                                            ⏱️ Vị trí: ${formatTime(item.currentTime)} / ${formatTime(item.duration)} (${percent}%)
+                                        </div>
+                                        
+                                        <!-- Progress Bar -->
+                                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mt-1">
+                                            <div class="h-full bg-brand rounded-full" style="width: ${percent}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between gap-2 mt-3 pt-2 border-t border-slate-800/60">
+                                    <a href="${targetUrl}" class="px-3 py-1 bg-brand/20 hover:bg-brand text-brand hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                        <i data-lucide="play" class="w-3 h-3 fill-current"></i> Xem tiếp
+                                    </a>
+                                    <button data-remove-slug="${item.slug}" class="btn-remove-history p-1.5 text-slate-500 hover:text-red-400 transition" title="Xóa khỏi lịch sử">
+                                        <i data-lucide="trash" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>`;
+            }
+
+            html += `</div>`;
+            document.getElementById('app-content').innerHTML = html;
+            lucide.createIcons();
+
+            // Sự kiện Xóa từng phim
+            document.querySelectorAll('.btn-remove-history').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const slug = btn.getAttribute('data-remove-slug');
+                    if (slug) {
+                        removeHistoryItem(slug);
+                        viewHistory(); // Re-render
+                    }
+                });
+            });
+
+            // Sự kiện Xóa toàn bộ
+            const btnClearAll = document.getElementById('btn-clear-all-history');
+            if (btnClearAll) {
+                btnClearAll.addEventListener('click', () => {
+                    if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử xem phim không?')) {
+                        clearAllHistory();
+                        viewHistory();
+                    }
+                });
+            }
+        }
+
         async function viewMovieDetail(slug, queryParams) {
-            // Kiểm tra cache để tránh hiện skeleton/fetch lại khi chỉ chọn server hoặc tập
             if (!cachedMovieData || cachedMovieData.movie?.slug !== slug) {
                 showSkeleton();
                 try {
@@ -503,11 +669,37 @@
             const episodes = cachedMovieData.episodes || [];
             const activeEpSlug = queryParams.ep || '';
             const activeServerIdx = parseInt(queryParams.sv || '0', 10);
+            const startTime = parseFloat(queryParams.t || '0');
 
-            // Tìm tập đang phát (chỉ khi người dùng đã bấm chọn tập)
+            // Kiểm tra Lịch Sử của Phim này
+            const savedHistory = getWatchHistory()[slug];
+
             let currentPlayingEp = null;
             if (activeEpSlug && episodes[activeServerIdx]) {
                 currentPlayingEp = episodes[activeServerIdx].server_data.find(e => e.slug === activeEpSlug);
+            }
+
+            // Xây dựng nút Continue Xem Phim nếu có trong lịch sử
+            let continueBanner = '';
+            if (savedHistory && !currentPlayingEp) {
+                const targetUrl = `#/phim/${movie.slug}?ep=${savedHistory.ep_slug}&sv=${savedHistory.server_idx}&t=${Math.floor(savedHistory.currentTime)}`;
+                continueBanner = `
+                <div class="mb-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex flex-wrap items-center justify-between gap-3 animate-fade-in">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl">
+                            <i data-lucide="history" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-amber-300 font-bold">Lịch Sử Xem Phim</p>
+                            <p class="text-xs text-slate-300">
+                                Bạn đã xem đến <strong class="text-white">${savedHistory.ep_name}</strong> (${savedHistory.server_name}) lúc <strong class="text-white">${formatTime(savedHistory.currentTime)}</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <a href="${targetUrl}" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
+                        <i data-lucide="play" class="w-4 h-4 fill-current"></i> Tiếp tục xem
+                    </a>
+                </div>`;
             }
 
             const html = `
@@ -517,6 +709,8 @@
                     <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                     <span class="text-slate-300">${movie.name}</span>
                 </div>
+
+                ${continueBanner}
 
                 <!-- KHU VỰC PLAYER / BANNER -->
                 <div id="media-container" class="w-full rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
@@ -544,11 +738,10 @@
                     <div class="lg:col-span-2 space-y-6">
                         ${episodes.length > 0 ? `
                             <div class="bg-slate-900/80 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 space-y-4">
-                                <!-- DANH SÁCH SERVER (Không gây load lại hay tự động chạy video) -->
+                                <!-- DANH SÁCH SERVER -->
                                 <div class="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
                                     <span class="text-xs font-bold uppercase text-slate-400 mr-2 shrink-0">📡 Server:</span>
                                     ${episodes.map((s, i) => {
-                                        // Nếu người dùng chưa chọn tập, bấm Server sẽ chỉ đổi Server tab
                                         const epParam = activeEpSlug ? `&ep=${activeEpSlug}` : '';
                                         return `<a href="#/phim/${movie.slug}?sv=${i}${epParam}" class="px-3 py-1.5 text-xs font-semibold rounded-lg transition shrink-0 ${i===activeServerIdx?'bg-brand text-white':'bg-slate-800 text-slate-300 hover:bg-slate-700'}">${s.server_name}</a>`;
                                     }).join('')}
@@ -604,54 +797,105 @@
             document.getElementById('app-content').innerHTML = html;
             lucide.createIcons();
 
-            // Nếu người dùng chọn tập phim cụ thể -> Khởi tạo video HLS
+            // Tải Trình Phát Video
             if (currentPlayingEp && currentPlayingEp.link_m3u8) {
-                initHlsPlayer(currentPlayingEp.link_m3u8);
+                const currentServerName = episodes[activeServerIdx]?.server_name || 'Server HD';
+                const currentEpName = currentPlayingEp.name || 'Tập phim';
+
+                initHlsPlayer(currentPlayingEp.link_m3u8, startTime, {
+                    slug: movie.slug,
+                    name: movie.name,
+                    origin_name: movie.origin_name,
+                    poster_url: movie.poster_url,
+                    thumb_url: movie.thumb_url,
+                    ep_slug: activeEpSlug,
+                    ep_name: currentEpName,
+                    server_idx: activeServerIdx,
+                    server_name: currentServerName
+                });
+
                 document.getElementById('media-container').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // HLS Player qua Proxy Service Worker
-        function initHlsPlayer(url) {
+        // HLS Player qua Proxy + Tự động lưu tiến trình Lịch Sử
+        function initHlsPlayer(url, startTime = 0, movieMeta = null) {
             const video = document.getElementById('hls-player');
             if (!video) return;
 
             const proxiedUrl = `/proxy-stream?url=${encodeURIComponent(url)}`;
-
             if (currentHls) currentHls.destroy();
+
+            // Hàm seek đến vị trí lịch sử khi video đã tải đủ dữ liệu
+            let initialSeekDone = false;
+            const applyStartTime = () => {
+                if (!initialSeekDone && startTime > 0) {
+                    video.currentTime = startTime;
+                    initialSeekDone = true;
+                }
+            };
 
             if (Hls.isSupported()) {
                 currentHls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
                 currentHls.loadSource(proxiedUrl);
                 currentHls.attachMedia(video);
                 currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    applyStartTime();
                     video.play().catch(() => {});
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = proxiedUrl;
                 video.addEventListener('loadedmetadata', () => {
+                    applyStartTime();
                     video.play().catch(() => {});
                 });
+            }
+
+            // Tự động lưu Lịch sử xem phim liên tục
+            if (movieMeta) {
+                let lastSaved = 0;
+                const updateHistory = () => {
+                    if (video.duration && !isNaN(video.duration)) {
+                        saveWatchProgress({
+                            ...movieMeta,
+                            currentTime: video.currentTime,
+                            duration: video.duration
+                        });
+                    }
+                };
+
+                video.ontimeupdate = () => {
+                    const now = Date.now();
+                    if (now - lastSaved > 3000) { // Lưu mỗi 3 giây
+                        lastSaved = now;
+                        updateHistory();
+                    }
+                };
+
+                video.onpause = updateHistory;
+                window.onbeforeunload = updateHistory;
             }
         }
 
         // ========== ROUTER XỬ LÝ ĐƯỜNG DẪN ==========
         async function router() {
-            closeMobileMenu(); // Tự động đóng menu trên di động mỗi khi chuyển trang
+            closeMobileMenu();
             if (currentHls) { currentHls.destroy(); currentHls = null; }
 
-            // TỰ ĐỘNG CUỘN LÊN ĐẦU TRANG KHI CHUYỂN ROUTE HOẶC CHUYỂN TRANG (PAGINATION)
+            // TỰ ĐỘNG CUỘN LÊN ĐẦU TRANG
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             const { route, subRoute, queryParams } = parseHash();
             const page = queryParams.page || 1;
 
             if (route !== 'phim') {
-                cachedMovieData = null; // Xóa cache phim khi chuyển sang trang khác
+                cachedMovieData = null;
             }
 
             if (route === 'home' || route === '') {
                 await viewHome();
+            } else if (route === 'lich-su') {
+                await viewHistory();
             } else if (route === 'danh-sach') {
                 const titles = { 
                     'phim-bo': 'Phim Bộ',
@@ -686,7 +930,6 @@
             loadHeaderMenus();
             router();
 
-            // Tự động đóng Mobile Menu khi người dùng bấm vào bất kỳ liên kết nào trong đó
             document.getElementById('mobile-menu').addEventListener('click', (e) => {
                 if (e.target.closest('a')) {
                     closeMobileMenu();
