@@ -941,13 +941,15 @@
                     if (group) {
                         const dropdown = group.querySelector('div[id^="dropdown-"]');
                         if (dropdown) {
-                            dropdown.classList.add('!opacity-0', '!invisible');
+                            // 1. Thêm class 'hidden' để ẩn ngay lập tức menu dropdown
+                            dropdown.classList.add('hidden');
+
+                            // 2. Chỉ hiển thị lại khi người dùng thực sự di chuột RỜI KHỎI menu
                             const resetDropdown = () => {
-                                dropdown.classList.remove('!opacity-0', '!invisible');
+                                dropdown.classList.remove('hidden');
                                 group.removeEventListener('mouseleave', resetDropdown);
                             };
                             group.addEventListener('mouseleave', resetDropdown, { once: true });
-                            setTimeout(resetDropdown, 800); // Tự giải phóng sau 800ms đề phòng không di chuột
                         }
                     }
                 });
