@@ -930,31 +930,6 @@
             loadHeaderMenus();
             router();
 
-            // Tự động đóng dropdown trên màn hình lớn khi click chọn danh mục
-            const desktopNav = document.querySelector('nav');
-            if (desktopNav) {
-                desktopNav.addEventListener('click', (e) => {
-                    const link = e.target.closest('a');
-                    if (!link) return;
-                    
-                    const group = link.closest('.group');
-                    if (group) {
-                        const dropdown = group.querySelector('div[id^="dropdown-"]');
-                        if (dropdown) {
-                            // 1. Thêm class 'hidden' để ẩn ngay lập tức menu dropdown
-                            dropdown.classList.add('hidden');
-
-                            // 2. Chỉ hiển thị lại khi người dùng thực sự di chuột RỜI KHỎI menu
-                            const resetDropdown = () => {
-                                dropdown.classList.remove('hidden');
-                                group.removeEventListener('mouseleave', resetDropdown);
-                            };
-                            group.addEventListener('mouseleave', resetDropdown, { once: true });
-                        }
-                    }
-                });
-            }
-
             document.getElementById('mobile-menu').addEventListener('click', (e) => {
                 if (e.target.closest('a')) {
                     closeMobileMenu();
@@ -1002,4 +977,4 @@
     })();
 </script>
 </body>
-</html>
+    </html>
