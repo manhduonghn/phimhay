@@ -930,6 +930,29 @@
             loadHeaderMenus();
             router();
 
+            // Tự động đóng dropdown trên màn hình lớn khi click chọn danh mục
+            const desktopNav = document.querySelector('nav');
+            if (desktopNav) {
+                desktopNav.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    if (!link) return;
+                    
+                    const group = link.closest('.group');
+                    if (group) {
+                        const dropdown = group.querySelector('div[id^="dropdown-"]');
+                        if (dropdown) {
+                            dropdown.classList.add('!opacity-0', '!invisible');
+                            const resetDropdown = () => {
+                                dropdown.classList.remove('!opacity-0', '!invisible');
+                                group.removeEventListener('mouseleave', resetDropdown);
+                            };
+                            group.addEventListener('mouseleave', resetDropdown, { once: true });
+                            setTimeout(resetDropdown, 800); // Tự giải phóng sau 800ms đề phòng không di chuột
+                        }
+                    }
+                });
+            }
+
             document.getElementById('mobile-menu').addEventListener('click', (e) => {
                 if (e.target.closest('a')) {
                     closeMobileMenu();
