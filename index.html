@@ -49,10 +49,8 @@
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-    <!-- Vidstack CSS & JS -->
-    <link rel="stylesheet" href="https://cdn.vidstack.io/player/theme.css" />
-    <link rel="stylesheet" href="https://cdn.vidstack.io/player/video.css" />
-    <script type="module" src="https://cdn.vidstack.io/player"></script>
+    <!-- Hls.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -86,14 +84,6 @@
             background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite;
-        }
-
-        /* Tối ưu giao diện Vidstack Player */
-        media-player {
-            --video-brand: #e50914;
-            --media-focus-ring-color: #e50914;
-            border-radius: 0.75rem;
-            overflow: hidden;
         }
 
         /* Cải thiện hiển thị trên màn hình ngang điện thoại */
@@ -245,8 +235,9 @@
             </a>
         </nav>
 
-        <!-- Mobile Search + Menu Toggle -->
+        <!-- Mobile Search (chỉ hiển thị trên mobile dọc) + Menu Toggle -->
         <div class="flex items-center gap-2 flex-1 md:flex-none justify-end">
+            <!-- Ô tìm kiếm trên mobile (dọc) -->
             <form id="search-form-mobile-header" class="relative flex-1 max-w-[130px] sm:max-w-xs block md:hidden">
                 <input type="text" id="search-input-mobile-header" placeholder="Tìm phim..."
                        class="w-full bg-slate-900/80 text-sm text-slate-200 pl-8 pr-3 py-1.5 rounded-full border border-slate-700/60 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand/30 transition placeholder:text-slate-500">
@@ -304,7 +295,7 @@
     </div>
 </header>
 
-<!-- ===== THANH TÌM KIẾM MÀN HÌNH LỚN ===== -->
+<!-- ===== THANH TÌM KIẾM MÀN HÌNH LỚN / NGANG ===== -->
 <div class="hidden md:block bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/70 py-2 sticky top-14 md:top-16 z-40">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <form id="search-form-desktop" class="relative max-w-md mx-auto">
@@ -339,6 +330,7 @@
         const IMG_DOMAIN = 'https://phimimg.com';
         const HISTORY_KEY = 'phimflix_history_v1';
 
+        let currentHls = null;
         let categoriesCache = [];
         let countriesCache = [];
         let yearsCache = [];
@@ -549,8 +541,12 @@
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         const content = this.nextElementSibling;
+                        const isOpen = content.classList.contains('hidden');
+                        // Đóng tất cả các accordion khác (tuỳ chọn)
+                        // Để mở rộng độc lập, ta chỉ toggle content của nó
                         content.classList.toggle('hidden');
                         this.classList.toggle('open');
+                        // Cập nhật icon (lucide sẽ tự động cập nhật sau khi thay đổi class)
                         lucide.createIcons();
                     });
                 });
@@ -767,6 +763,7 @@
             document.getElementById('app-content').innerHTML = html;
             lucide.createIcons();
 
+            // Sự kiện Xóa từng phim
             document.querySelectorAll('.btn-remove-history').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -853,10 +850,7 @@
                 <div id="media-container" class="w-full rounded-xl md:rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
                     ${currentPlayingEp ? `
                         <div class="aspect-video w-full bg-black relative">
-                            <media-player id="vidstack-player" class="w-full h-full" title="${movie.name}" poster="${getImageUrl(movie.thumb_url)}">
-                                <media-provider></media-provider>
-                                <media-video-layout></media-video-layout>
-                            </media-player>
+                            <video id="hls-player" controls class="w-full h-full object-contain" poster="${getImageUrl(movie.thumb_url)}"></video>
                         </div>
                     ` : `
                         <div class="relative aspect-[16/9] md:aspect-[21/9] w-full">
@@ -939,7 +933,7 @@
                 const currentServerName = episodes[activeServerIdx]?.server_name || 'Server HD';
                 const currentEpName = currentPlayingEp.name || 'Tập phim';
 
-                initVidstackPlayer(currentPlayingEp.link_m3u8, startTime, {
+                initHlsPlayer(currentPlayingEp.link_m3u8, startTime, {
                     slug: movie.slug,
                     name: movie.name,
                     origin_name: movie.origin_name,
@@ -955,52 +949,58 @@
             }
         }
 
-        // KHỞI TẠO VIDSTACK PLAYER
-        function initVidstackPlayer(url, startTime = 0, movieMeta = null) {
-            const player = document.getElementById('vidstack-player');
-            if (!player) return;
+        function initHlsPlayer(url, startTime = 0, movieMeta = null) {
+            const video = document.getElementById('hls-player');
+            if (!video) return;
 
             const proxiedUrl = `/proxy-stream?url=${encodeURIComponent(url)}`;
-            
-            // Cấu hình Nguồn phát Vidstack
-            player.src = {
-                src: proxiedUrl,
-                type: 'application/x-mpegurl'
-            };
+            if (currentHls) currentHls.destroy();
 
             let initialSeekDone = false;
-
-            // Nhảy tới mốc thời gian cũ khi luồng sẵn sàng
-            player.addEventListener('can-play', () => {
+            const applyStartTime = () => {
                 if (!initialSeekDone && startTime > 0) {
-                    player.currentTime = startTime;
+                    video.currentTime = startTime;
                     initialSeekDone = true;
                 }
-                player.play().catch(() => {});
-            }, { once: true });
+            };
+
+            if (Hls.isSupported()) {
+                currentHls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
+                currentHls.loadSource(proxiedUrl);
+                currentHls.attachMedia(video);
+                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    applyStartTime();
+                    video.play().catch(() => {});
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = proxiedUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    applyStartTime();
+                    video.play().catch(() => {});
+                });
+            }
 
             if (movieMeta) {
                 let lastSaved = 0;
                 const updateHistory = () => {
-                    if (player.duration && !isNaN(player.duration)) {
+                    if (video.duration && !isNaN(video.duration)) {
                         saveWatchProgress({
                             ...movieMeta,
-                            currentTime: player.currentTime,
-                            duration: player.duration
+                            currentTime: video.currentTime,
+                            duration: video.duration
                         });
                     }
                 };
 
-                // Lưu tiến trình xem định kỳ 3s
-                player.addEventListener('time-update', () => {
+                video.ontimeupdate = () => {
                     const now = Date.now();
                     if (now - lastSaved > 3000) {
                         lastSaved = now;
                         updateHistory();
                     }
-                });
+                };
 
-                player.addEventListener('pause', updateHistory);
+                video.onpause = updateHistory;
                 window.onbeforeunload = updateHistory;
             }
         }
@@ -1008,6 +1008,8 @@
         // ========== ROUTER ==========
         async function router() {
             closeMobileMenu();
+            if (currentHls) { currentHls.destroy(); currentHls = null; }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             const { route, subRoute, queryParams } = parseHash();
@@ -1055,7 +1057,7 @@
             loadHeaderMenus();
             router();
 
-            // Form tìm kiếm
+            // Sự kiện cho các form tìm kiếm
             const searchForms = [
                 { formId: 'search-form-mobile-header', inputId: 'search-input-mobile-header' },
                 { formId: 'search-form-mobile-menu', inputId: 'search-input-mobile-menu' },
@@ -1089,6 +1091,7 @@
                 lucide.createIcons();
             });
 
+            // Đóng menu khi click vào link bên trong
             mobileMenu.addEventListener('click', (e) => {
                 if (e.target.closest('a')) {
                     closeMobileMenu();
