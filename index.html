@@ -122,6 +122,13 @@
             overflow: hidden;
         }
 
+        /* iOS: đảm bảo video hiển thị đúng */
+        media-player video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+        }
+
         /* 🔧 Tối ưu hiển thị khi xoay ngang */
         @media (max-width: 820px) and (orientation: landscape) {
             .grid-cols-2 {
@@ -140,7 +147,6 @@
             }
         }
 
-        /* 🔧 Điều chỉnh kích thước chữ trên mobile */
         @media (max-width: 640px) {
             .grid-cols-2 {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -162,7 +168,6 @@
                 font-size: 1.25rem;
                 line-height: 1.75rem;
             }
-            /* Tăng cỡ chữ cho các phần tử nhỏ */
             .text-xs {
                 font-size: 0.8rem !important;
             }
@@ -172,7 +177,6 @@
             .text-base {
                 font-size: 1rem !important;
             }
-            /* Điều chỉnh movie card */
             .movie-card .text-xs {
                 font-size: 0.8rem !important;
             }
@@ -997,6 +1001,29 @@
                             </div>`;
                 }
 
+                // 🔧 iOS: Thêm playsinline và webkit-playsinline vào media-player
+                const mediaPlayerHtml = currentPlayingEp ? `
+                            <div class="aspect-video w-full bg-black relative">
+                                <media-player id="vidstack-player" class="w-full h-full" title="${movie.name}" poster="${getImageUrl(movie.thumb_url)}" playsinline webkit-playsinline>
+                                    <media-provider></media-provider>
+                                    <media-video-layout></media-video-layout>
+                                </media-player>
+                            </div>
+                        ` : `
+                            <div class="relative aspect-[16/9] md:aspect-[21/9] w-full">
+                                <img src="${getImageUrl(movie.thumb_url || movie.poster_url)}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 md:p-10">
+                                    <h1 class="hero-title font-extrabold text-white mb-1 drop-shadow-lg">${movie.name}</h1>
+                                    <p class="hero-desc text-slate-200 mb-3">${movie.origin_name} (${movie.year})</p>
+                                    ${episodes.length > 0 && episodes[0].server_data.length > 0 ? `
+                                        <a href="#/phim/${movie.slug}?ep=${episodes[0].server_data[0].slug}&sv=${activeServerIdx}" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-sm sm:text-base transition shadow-xl shadow-brand/20 w-fit">
+                                            <i data-lucide="play" class="w-4 h-4 md:w-5 md:h-5 fill-white"></i> Xem phim
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+
                 const html = `
                         <div class="space-y-4 md:space-y-8 animate-fade-in">
                             <div class="flex items-center gap-1.5 text-sm sm:text-base text-slate-400 flex-wrap">
@@ -1008,27 +1035,7 @@
                             ${continueBanner}
 
                             <div id="media-container" class="w-full rounded-xl md:rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl">
-                                ${currentPlayingEp ? `
-                                    <div class="aspect-video w-full bg-black relative">
-                                        <media-player id="vidstack-player" class="w-full h-full" title="${movie.name}" poster="${getImageUrl(movie.thumb_url)}">
-                                            <media-provider></media-provider>
-                                            <media-video-layout></media-video-layout>
-                                        </media-player>
-                                    </div>
-                                ` : `
-                                    <div class="relative aspect-[16/9] md:aspect-[21/9] w-full">
-                                        <img src="${getImageUrl(movie.thumb_url || movie.poster_url)}" class="w-full h-full object-cover">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 md:p-10">
-                                            <h1 class="hero-title font-extrabold text-white mb-1 drop-shadow-lg">${movie.name}</h1>
-                                            <p class="hero-desc text-slate-200 mb-3">${movie.origin_name} (${movie.year})</p>
-                                            ${episodes.length > 0 && episodes[0].server_data.length > 0 ? `
-                                                <a href="#/phim/${movie.slug}?ep=${episodes[0].server_data[0].slug}&sv=${activeServerIdx}" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold text-sm sm:text-base transition shadow-xl shadow-brand/20 w-fit">
-                                                    <i data-lucide="play" class="w-4 h-4 md:w-5 md:h-5 fill-white"></i> ▶ Xem phim
-                                                </a>
-                                            ` : ''}
-                                        </div>
-                                    </div>
-                                `}
+                                ${mediaPlayerHtml}
                             </div>
 
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
@@ -1108,10 +1115,14 @@
                         server_name: currentServerName
                     });
 
-                    document.getElementById('media-container').scrollIntoView({ behavior: 'smooth' });
+                    // Cuộn đến player sau khi render
+                    setTimeout(() => {
+                        document.getElementById('media-container')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
                 }
             }
 
+            // 🔧 Sửa initVidstackPlayer để hỗ trợ iOS: không tự động play
             function initVidstackPlayer(url, startTime = 0, movieMeta = null) {
                 const player = document.getElementById('vidstack-player');
                 if (!player) return;
@@ -1123,14 +1134,25 @@
                     type: 'application/x-mpegurl'
                 };
 
+                // Không tự động play, để người dùng bấm nút play (iOS yêu cầu)
+                // Chỉ set vị trí thời gian khi sẵn sàng
                 let initialSeekDone = false;
 
                 player.addEventListener('can-play', () => {
                     if (!initialSeekDone && startTime > 0) {
+                        // iOS: có thể set currentTime nhưng không play
                         player.currentTime = startTime;
                         initialSeekDone = true;
                     }
-                    player.play().catch(() => {});
+                    // Không gọi play() tự động
+                }, { once: true });
+
+                // Nếu không có can-play, dùng loadedmetadata
+                player.addEventListener('loadedmetadata', () => {
+                    if (!initialSeekDone && startTime > 0) {
+                        player.currentTime = startTime;
+                        initialSeekDone = true;
+                    }
                 }, { once: true });
 
                 if (movieMeta) {
