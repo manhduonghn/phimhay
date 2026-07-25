@@ -210,6 +210,19 @@
 
         #app-content {
             min-height: 60vh;
+            transition: opacity 0.25s ease;
+            will-change: opacity;
+        }
+        #app-content.opacity-0 {
+            opacity: 0;
+        }
+
+        /* 🔧 FIX: Ẩn nội dung khi chưa load xong để tránh flash */
+        #app-content:not(.loaded) {
+            opacity: 0;
+        }
+        #app-content.loaded {
+            opacity: 1;
         }
     </style>
 </head>
@@ -340,7 +353,7 @@
     </div>
 
     <!-- ===== MAIN CONTENT ===== -->
-    <main id="app-content" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-8 py-4 md:py-6 animate-fade-in">
+    <main id="app-content" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-8 py-4 md:py-6 loaded">
     </main>
 
     <!-- ===== FOOTER ===== -->
@@ -370,40 +383,43 @@
             let homeSwiper = null;
             let cachedMovieData = null;
 
+            // 🔧 Thêm hàm cập nhật tiêu đề trang
+            function updatePageTitle(title) {
+                document.title = title || 'PhimFlix • Xem Phim HD Online';
+            }
+
+            // 🔧 FIX: Hàm render nội dung với hiệu ứng mờ dần (chống nháy)
+            function renderContent(html) {
+                const container = document.getElementById('app-content');
+                // Bắt đầu với opacity 0
+                container.classList.add('opacity-0');
+                // Cập nhật nội dung
+                container.innerHTML = html;
+                // Force reflow để trình duyệt áp dụng thay đổi
+                void container.offsetHeight;
+                // Hiển thị với hiệu ứng mượt
+                container.classList.remove('opacity-0');
+                // Đảm bảo lucide icons được tạo lại sau khi nội dung thay đổi
+                setTimeout(() => lucide.createIcons(), 50);
+            }
+
             // 🔧 FIX: Xử lý sự kiện xoay màn hình để reset viewport
             function handleOrientationChange() {
-                // Đợi trình duyệt hoàn tất xoay
                 setTimeout(function() {
-                    // Force reflow để trình duyệt tính toán lại layout
                     document.body.style.display = 'none';
-                    void document.body.offsetHeight; // trigger reflow
+                    void document.body.offsetHeight;
                     document.body.style.display = '';
-
-                    // Cuộn lên đầu để reset vị trí
                     window.scrollTo(0, 0);
-
-                    // Đảm bảo viewport scale về 1.0
-                    const meta = document.querySelector('meta[name=viewport]');
-                    if (meta) {
-                        const content = meta.getAttribute('content');
-                        // Nếu có scale khác 1.0 thì reset
-                        if (content && (content.includes('initial-scale=') || content.includes('maximum-scale='))) {
-                            // Không cần thay đổi vì meta đã có initial-scale=1.0, maximum-scale=1.0
-                        }
-                    }
                 }, 350);
             }
 
-            // Lắng nghe sự kiện xoay màn hình
             if (window.orientation !== undefined) {
                 window.addEventListener('orientationchange', handleOrientationChange);
             }
-            // Fallback cho resize (một số trình duyệt không support orientationchange)
             let resizeTimer = null;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(function() {
-                    // Chỉ xử lý khi chiều rộng thay đổi đáng kể (xoay màn hình)
                     if (window.innerWidth < 820) {
                         handleOrientationChange();
                     }
@@ -509,7 +525,7 @@
             }
 
             function showSkeleton() {
-                document.getElementById('app-content').innerHTML = `
+                const skeletonHtml = `
                         <div class="space-y-8 animate-pulse">
                             <div class="skeleton h-56 md:h-80 lg:h-96 rounded-2xl"></div>
                             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-5">
@@ -517,6 +533,7 @@
                             </div>
                         </div>
                     `;
+                renderContent(skeletonHtml);
             }
 
             function renderPagination(pagination, hashPrefix) {
@@ -631,12 +648,13 @@
             // ========== VIEWS ==========
             async function viewHome() {
                 showSkeleton();
+                // Cập nhật tiêu đề ngay khi bắt đầu tải
+                updatePageTitle('Trang chủ - PhimFlix');
                 try {
                     const res = await fetch(`${API_BASE}/v1/api/home`).then(r => r.json());
                     const items = res?.data?.items || [];
                     if (!items.length) {
-                        document.getElementById('app-content').innerHTML =
-                            '<p class="text-center py-20 text-slate-400">Không có dữ liệu phim.</p>';
+                        renderContent('<p class="text-center py-20 text-slate-400">Không có dữ liệu phim.</p>');
                         return;
                     }
 
@@ -675,7 +693,7 @@
                                 </div>
                             </div>`;
 
-                    document.getElementById('app-content').innerHTML = html;
+                    renderContent(html);
                     lucide.createIcons();
 
                     if (homeSwiper) homeSwiper.destroy();
@@ -689,13 +707,14 @@
                     });
 
                 } catch (err) {
-                    document.getElementById('app-content').innerHTML =
-                        '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải trang chủ.</p>';
+                    renderContent('<p class="text-center py-20 text-red-400">⚠️ Lỗi tải trang chủ.</p>');
                 }
             }
 
             async function viewCatalog(endpointUrl, fallbackTitle, hashPrefix) {
                 showSkeleton();
+                // Cập nhật tiêu đề với tên danh mục
+                updatePageTitle(fallbackTitle + ' - PhimFlix');
                 try {
                     const res = await fetch(endpointUrl).then(r => r.json());
                     const data = res?.data || res;
@@ -717,16 +736,17 @@
                                     ${renderPagination(pagination, hashPrefix)}
                                 `}
                             </div>`;
-                    document.getElementById('app-content').innerHTML = html;
+                    renderContent(html);
                     lucide.createIcons();
                 } catch (err) {
-                    document.getElementById('app-content').innerHTML =
-                        '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải danh sách phim.</p>';
+                    renderContent('<p class="text-center py-20 text-red-400">⚠️ Lỗi tải danh sách phim.</p>');
                 }
             }
 
             async function viewSearch(keyword, page = 1) {
                 showSkeleton();
+                // Cập nhật tiêu đề với từ khóa tìm kiếm
+                updatePageTitle('Tìm kiếm: ' + keyword + ' - PhimFlix');
                 try {
                     const res = await fetch(
                         `${API_BASE}/v1/api/tim-kiem?keyword=${encodeURIComponent(keyword)}&page=${page}`).then(r => r
@@ -747,16 +767,16 @@
                                     ${renderPagination(pagination, `#/tim-kiem?keyword=${encodeURIComponent(keyword)}&`)}
                                 `}
                             </div>`;
-                    document.getElementById('app-content').innerHTML = html;
+                    renderContent(html);
                     lucide.createIcons();
                 } catch (err) {
-                    document.getElementById('app-content').innerHTML =
-                        '<p class="text-center py-20 text-red-400">⚠️ Lỗi tìm kiếm.</p>';
+                    renderContent('<p class="text-center py-20 text-red-400">⚠️ Lỗi tìm kiếm.</p>');
                 }
             }
 
             // TRANG LỊCH SỬ XEM PHIM
             async function viewHistory() {
+                updatePageTitle('Lịch sử xem phim - PhimFlix');
                 const historyMap = getWatchHistory();
                 const items = Object.values(historyMap).sort((a, b) => b.updatedAt - a.updatedAt);
 
@@ -838,7 +858,7 @@
                 }
 
                 html += `</div>`;
-                document.getElementById('app-content').innerHTML = html;
+                renderContent(html);
                 lucide.createIcons();
 
                 document.querySelectorAll('.btn-remove-history').forEach(btn => {
@@ -866,17 +886,19 @@
             async function viewMovieDetail(slug, queryParams) {
                 if (!cachedMovieData || cachedMovieData.movie?.slug !== slug) {
                     showSkeleton();
+                    // Đặt tiêu đề tạm thời trong khi chờ tải
+                    updatePageTitle('Đang tải phim... - PhimFlix');
                     try {
                         const res = await fetch(`${API_BASE}/phim/${slug}`).then(r => r.json());
                         if (!res.status) {
-                            document.getElementById('app-content').innerHTML =
-                                '<p class="text-center py-20 text-red-400">Phim không tồn tại.</p>';
+                            renderContent('<p class="text-center py-20 text-red-400">Phim không tồn tại.</p>');
+                            updatePageTitle('Phim không tồn tại - PhimFlix');
                             return;
                         }
                         cachedMovieData = res;
                     } catch (err) {
-                        document.getElementById('app-content').innerHTML =
-                            '<p class="text-center py-20 text-red-400">⚠️ Lỗi tải chi tiết phim.</p>';
+                        renderContent('<p class="text-center py-20 text-red-400">⚠️ Lỗi tải chi tiết phim.</p>');
+                        updatePageTitle('Lỗi - PhimFlix');
                         return;
                     }
                 }
@@ -886,6 +908,11 @@
                 const activeEpSlug = queryParams.ep || '';
                 const activeServerIdx = parseInt(queryParams.sv || '0', 10);
                 const startTime = parseFloat(queryParams.t || '0');
+
+                // Cập nhật tiêu đề với tên phim
+                if (movie && movie.name) {
+                    updatePageTitle(movie.name + ' - PhimFlix');
+                }
 
                 const savedHistory = getWatchHistory()[slug];
 
@@ -1009,7 +1036,7 @@
                             </div>
                         </div>`;
 
-                document.getElementById('app-content').innerHTML = html;
+                renderContent(html);
                 lucide.createIcons();
 
                 if (currentPlayingEp && currentPlayingEp.link_m3u8) {
